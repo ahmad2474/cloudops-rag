@@ -15,6 +15,7 @@ from cloudops_rag.providers.bedrock import (
     BedrockLLMProvider,
     BedrockRerankerProvider,
 )
+from cloudops_rag.providers.nvidia import NvidiaLLMProvider
 from cloudops_rag.providers.opensearch import OpenSearchProvider
 from cloudops_rag.providers.stub import (
     StubEmbeddingProvider,
@@ -76,6 +77,16 @@ def _build_llm(settings: Settings) -> LLMProvider:
             model=settings.llm_model,
             region=settings.aws_region,
             allow_aws_calls=settings.allow_aws_calls,
+        )
+    if settings.llm_provider == "nvidia":
+        key = settings.nvidia_api_key
+        return NvidiaLLMProvider(
+            model=settings.llm_model,
+            api_key=key.get_secret_value() if key else None,
+            base_url=settings.nvidia_base_url,
+            allow_nvidia_calls=settings.allow_nvidia_calls,
+            timeout_s=settings.timeout_llm_s,
+            max_concurrency=settings.nvidia_max_concurrency,
         )
     raise ProviderNotConfiguredError(f"llm provider: {settings.llm_provider}")
 

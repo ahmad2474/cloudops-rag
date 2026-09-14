@@ -36,6 +36,9 @@ test: ## Python unit + API tests (no Docker needed)
 test-integration: ## Integration tests (needs `make up`)
 	uv run pytest -m integration
 
+test-nvidia: ## One live NVIDIA NIM request (needs NVIDIA_API_KEY in .env)
+	NVIDIA_LIVE_TESTS=1 ALLOW_NVIDIA_CALLS=true uv run pytest -m integration tests/integration/test_nvidia_live.py
+
 lint: ## Ruff lint + format check
 	uv run ruff check .
 	uv run ruff format --check .
@@ -134,6 +137,6 @@ docker-lint: ## hadolint Dockerfiles
 check: lint typecheck test corpus-check web-lint tf-check ## Everything CI runs (minus Playwright)
 
 .PHONY: help up down nuke logs install api test test-integration lint fmt typecheck \
-        auth-demo corpus-fetch corpus-manifest corpus-check index-plan index index-full ask \
+        test-nvidia auth-demo corpus-fetch corpus-manifest corpus-check index-plan index index-full ask \
         eval-dataset eval eval-full \
         web-install web-dev web-build web-lint web-test tf-check tf-init tf-plan tf-apply tf-destroy tf-output aws-push aws-cost docker-lint check

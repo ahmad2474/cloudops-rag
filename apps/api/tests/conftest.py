@@ -1,3 +1,4 @@
+import os
 from collections.abc import AsyncIterator
 
 import pytest
@@ -9,6 +10,15 @@ from cloudops_rag.providers.stub import StubSearchProvider
 from cloudops_rag.testing import seed_search, test_users_json
 
 _USERS = test_users_json()  # bcrypt once per session
+
+
+@pytest.fixture(autouse=True)
+def _no_external_llm_calls(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Hosted providers stay off during API tests (mirrors tests/conftest.py)."""
+    if os.environ.get("NVIDIA_LIVE_TESTS") != "1":
+        monkeypatch.setenv("ALLOW_NVIDIA_CALLS", "false")
+        monkeypatch.delenv("NVIDIA_API_KEY", raising=False)
+    monkeypatch.setenv("ALLOW_AWS_CALLS", "false")
 
 
 @pytest.fixture

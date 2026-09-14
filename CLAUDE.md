@@ -28,6 +28,11 @@ Explicitly forbidden unless a profiled need is demonstrated and approved:
 multi-agent systems, LangGraph/LangChain, Kubernetes for the RAG app, Kafka, Redis, fine-tuning,
 a second vector store, more than one LLM provider implementation at a time, autonomous agents.
 
+Approved exception (2026-09-15): **NVIDIA NIM** (`LLM_PROVIDER=nvidia`) is an optional LLM
+provider for local development and evaluation only, behind the same `LLMProvider` Protocol.
+Bedrock remains the AWS runtime; `APP_ENV=aws` refuses `nvidia`. Key only via `NVIDIA_API_KEY`;
+calls gated by `ALLOW_NVIDIA_CALLS=true`; tests never call it. See `docs/providers.md`.
+
 All external capabilities go through provider interfaces in `src/cloudops_rag/providers/`:
 `EmbeddingProvider`, `LLMProvider`, `RerankerProvider`, `SearchProvider`. Application code
 depends on the Protocols, never on boto3/opensearch-py directly.

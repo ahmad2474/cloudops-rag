@@ -2,10 +2,13 @@
 
 from typing import Literal
 
-from pydantic import Field, field_validator
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ProviderName = Literal["stub", "bedrock"]
+# LLM only: NVIDIA NIM is an approved optional provider for local dev + evaluation
+# (docs/providers.md). Embeddings and reranking stay Bedrock/stub.
+LLMProviderName = Literal["stub", "bedrock", "nvidia"]
 SearchProviderName = Literal["opensearch"]
 RetrievalStrategy = Literal["vector", "bm25", "hybrid_rrf", "hybrid_weighted"]
 ContextMode = Literal["parent", "child", "child_window"]
@@ -19,7 +22,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     # --- providers -------------------------------------------------------------------------
-    llm_provider: ProviderName = "stub"
+    llm_provider: LLMProviderName = "stub"
     llm_model: str = "amazon.nova-lite-v1:0"
     llm_max_tokens: int = Field(default=1024, ge=64, le=8192)
     embedding_provider: ProviderName = "stub"
@@ -27,6 +30,11 @@ class Settings(BaseSettings):
     embedding_dimensions: int = 1024  # Titan V2 supports 256 / 512 / 1024
     reranker_provider: ProviderName = "stub"
     reranker_model: str = "cohere.rerank-v3-5:0"
+    # NVIDIA NIM (LLM_PROVIDER=nvidia). Key only via env/secrets; calls gated like AWS.
+    nvidia_api_key: SecretStr | None = None
+    nvidia_base_url: str = "https://integrate.api.nvidia.com/v1"
+    nvidia_max_concurrency: int = Field(default=2, ge=1, le=8)
+    allow_nvidia_calls: bool = False
 
     # --- production API (Phase 8) ----------------------------------------------------------
     timeout_embed_s: float = Field(default=10.0, gt=0)
@@ -97,6 +105,8 @@ class Settings(BaseSettings):
                 problems.append("AUTH_USERS is empty — nobody could log in")
         if len(self.auth_secret) < 32:
             problems.append("AUTH_SECRET must be at least 32 characters")
+        if self.app_env == "aws" and self.llm_provider == "nvidia":
+            problems.append("LLM_PROVIDER=nvidia is for local dev/eval only; AWS runs Bedrock")
         return problems
 
     @property

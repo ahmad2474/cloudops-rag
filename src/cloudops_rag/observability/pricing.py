@@ -11,6 +11,11 @@ PRICES: dict[str, tuple[float, float]] = {
     "amazon.nova-pro-v1:0": (0.80, 3.20),
     "amazon.titan-embed-text-v2:0": (0.02, 0.0),
     "deepseek.v3-v1:0": (0.62, 1.85),
+    # NVIDIA API catalog (build.nvidia.com) developer credits: no per-token billing while on
+    # the free allotment. Keep 0.0 unless the key is on a paid NIM plan.
+    "meta/llama-3.3-70b-instruct": (0.0, 0.0),
+    "meta/llama-3.1-8b-instruct": (0.0, 0.0),
+    "nvidia/llama-3.1-nemotron-70b-instruct": (0.0, 0.0),
     "stub-model": (0.0, 0.0),
     "stub-rerank": (0.0, 0.0),
     "stub-embed": (0.0, 0.0),
