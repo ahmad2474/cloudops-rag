@@ -27,6 +27,8 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run mypy
       - run: uv run pytest -m "not integration" --cov=cloudops_rag --cov=app --cov-report=term-missing
+      - name: corpus manifest up to date
+        run: uv run python apps/ingestion/build_manifest.py --check
 
   python-integration:
     name: Python — integration (OpenSearch)

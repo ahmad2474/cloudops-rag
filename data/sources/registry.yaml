@@ -1,0 +1,2015 @@
+# Curated public CloudOps corpus — spec §4.
+#
+# These are *pointers*, not content. `apps/ingestion/fetch_sources.py` downloads them into
+# data/sources/raw/ (gitignored). Nothing public is committed to this repository.
+#
+# Licensing (spec §4: check before redistributing):
+#   - AWS docs: proprietary. Local fetch for indexing only. Not redistributed.
+#   - Kubernetes docs: CC-BY-4.0 (kubernetes/website). Attribution preserved via source_url.
+#   - Terraform docs: BUSL-1.1 (hashicorp/web-unified-docs). Local fetch only. Not redistributed.
+#
+# Not scraped: the whole AWS site. Selection criterion: pages an on-call platform engineer
+# actually opens during EC2/VPC/IAM/S3/RDS/EKS/CloudWatch incidents.
+sources:
+- document_id: aws-ec2-troubleshooting-instances
+  title: Troubleshoot EC2 instances
+  source: aws
+  source_url: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstances.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - ec2
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-ec2-troubleshooting-connecting
+  title: Troubleshoot connecting to your EC2 instance
+  source: aws
+  source_url: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - ec2
+  - ssh
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-ec2-instance-metadata
+  title: EC2 instance metadata and user data (IMDS)
+  source: aws
+  source_url: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - ec2
+  - imds
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-ec2-instance-resize
+  title: Change the instance type
+  source: aws
+  source_url: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-resize.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - ec2
+  - capacity
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-ec2-burstable-credits
+  title: 'Burstable performance instances: CPU credits'
+  source: aws
+  source_url: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-credits-baseline-concepts.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - ec2
+  - cpu
+  - t3
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-configure-subnets
+  title: Subnets for your VPC
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - subnet
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-subnet-sizing
+  title: VPC and subnet CIDR sizing
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - subnet
+  - cidr
+  - ip-exhaustion
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-nat-gateway
+  title: NAT gateways
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - nat
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-nat-gateway-troubleshooting
+  title: Troubleshoot NAT gateways
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-troubleshooting.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - nat
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-security-groups
+  title: Control traffic with security groups
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - security-group
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-network-acls
+  title: Control traffic with network ACLs
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - nacl
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-endpoints
+  title: VPC endpoints (AWS PrivateLink)
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-endpoints.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - endpoint
+  - privatelink
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-vpc-flow-logs
+  title: VPC Flow Logs
+  source: aws
+  source_url: https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - vpc
+  - flow-logs
+  - observability
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-iam-passrole
+  title: Granting a user permissions to pass a role to an AWS service (iam:PassRole)
+  source: aws
+  source_url: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - iam
+  - passrole
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-iam-troubleshoot-general
+  title: 'Troubleshoot IAM: general issues'
+  source: aws
+  source_url: https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - iam
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-iam-troubleshoot-roles
+  title: Troubleshoot IAM roles
+  source: aws
+  source_url: https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_roles.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - iam
+  - roles
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-iam-troubleshoot-access-denied
+  title: Troubleshoot access denied error messages
+  source: aws
+  source_url: https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_access-denied.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - iam
+  - access-denied
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-iam-policy-evaluation-logic
+  title: IAM policy evaluation logic
+  source: aws
+  source_url: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - iam
+  - policy
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-iam-roles-common-scenarios
+  title: Common scenarios for IAM roles
+  source: aws
+  source_url: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - iam
+  - roles
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-iam-policy-condition
+  title: 'IAM JSON policy elements: Condition'
+  source: aws
+  source_url: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - iam
+  - policy
+  - condition
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-s3-troubleshoot-403
+  title: Troubleshoot HTTP 403 Access Denied errors in Amazon S3
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshoot-403-errors.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - s3
+  - access-denied
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-s3-block-public-access
+  title: Blocking public access to your Amazon S3 storage
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - s3
+  - security
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-s3-bucket-policies
+  title: Bucket policies for Amazon S3
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-policies.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - s3
+  - policy
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-s3-troubleshooting
+  title: Troubleshooting Amazon S3
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshooting.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - s3
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-s3-access-control-overview
+  title: Access control in Amazon S3
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-overview.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - s3
+  - iam
+  - access-control
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-s3-lifecycle-transitions
+  title: S3 Lifecycle transition considerations
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - s3
+  - lifecycle
+  - cost
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-rds-troubleshooting
+  title: Troubleshooting for Amazon RDS
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Troubleshooting.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - rds
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-rds-vpc
+  title: Working with a DB instance in a VPC
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - rds
+  - vpc
+  - connectivity
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-rds-storage
+  title: Amazon RDS DB instance storage
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - rds
+  - storage
+  - iops
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-rds-read-replicas
+  title: Working with DB instance read replicas
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - rds
+  - replication
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-rds-multi-az
+  title: Multi-AZ DB instance deployments
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - rds
+  - multi-az
+  - failover
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-rds-connect-postgresql
+  title: Connecting to a DB instance running PostgreSQL
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - rds
+  - postgresql
+  - connectivity
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-rds-quotas
+  title: Quotas and constraints for Amazon RDS
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - rds
+  - quotas
+  - max-connections
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-troubleshooting
+  title: Troubleshoot problems with Amazon EKS clusters and nodes
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - troubleshooting
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-pod-networking
+  title: Amazon VPC CNI plugin for Kubernetes
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/pod-networking.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - vpc-cni
+  - networking
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-cni-iam-role
+  title: Configure the VPC CNI plugin to use IRSA
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/cni-iam-role.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - vpc-cni
+  - iam
+  - irsa
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-cni-increase-ips
+  title: Assign more IP addresses to EKS nodes with prefix delegation
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - vpc-cni
+  - prefix-delegation
+  - ip-exhaustion
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-cni-custom-networking
+  title: Deploy pods in alternate subnets with custom networking
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/cni-custom-network.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - vpc-cni
+  - custom-networking
+  - ip-exhaustion
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-networking
+  title: Amazon EKS networking
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/eks-networking.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - networking
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-kubernetes-versions
+  title: Amazon EKS Kubernetes versions
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - versions
+  - upgrade
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-kubernetes-versions-standard
+  title: Amazon EKS standard support versions
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions-standard.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - versions
+  - support
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-update-cluster
+  title: Update existing cluster to new Kubernetes version
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - upgrade
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-security-group-requirements
+  title: Amazon EKS security group requirements
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - security-group
+  - networking
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-managed-node-groups
+  title: Managed node groups
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - node-groups
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-irsa
+  title: IAM roles for service accounts
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - iam
+  - irsa
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-autoscaling
+  title: Scale cluster compute with Karpenter and Cluster Autoscaler
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - autoscaling
+  - karpenter
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-nlb
+  title: Route TCP and UDP traffic with Network Load Balancers
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/userguide/network-load-balancing.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - load-balancer
+  - nlb
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-bp-networking
+  title: 'EKS Best Practices: Networking'
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/best-practices/networking.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - best-practices
+  - networking
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-bp-vpc-cni
+  title: 'EKS Best Practices: VPC and CNI'
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/best-practices/vpc-cni.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - best-practices
+  - vpc-cni
+  - ip-exhaustion
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-bp-scalability
+  title: 'EKS Best Practices: Scalability'
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/best-practices/scalability.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - best-practices
+  - scalability
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-bp-reliability
+  title: 'EKS Best Practices: Reliability'
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/best-practices/reliability.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - best-practices
+  - reliability
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-eks-bp-security
+  title: 'EKS Best Practices: Security'
+  source: aws
+  source_url: https://docs.aws.amazon.com/eks/latest/best-practices/security.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eks
+  - best-practices
+  - security
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-cloudwatch-concepts
+  title: Amazon CloudWatch concepts
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - cloudwatch
+  - metrics
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-cloudwatch-alarms
+  title: Create a CloudWatch alarm based on a static threshold
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - cloudwatch
+  - alarms
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-cloudwatch-container-insights
+  title: Container Insights
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - cloudwatch
+  - eks
+  - container-insights
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-cloudwatch-container-insights-eks-metrics
+  title: Container Insights metrics for Amazon EKS
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-metrics-EKS.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - cloudwatch
+  - eks
+  - metrics
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-cloudwatch-logs
+  title: What is Amazon CloudWatch Logs?
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - cloudwatch
+  - logs
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-cloudwatch-emf
+  title: CloudWatch Embedded Metric Format
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - cloudwatch
+  - emf
+  - metrics
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: aws-cloudwatch-viewing-metrics
+  title: View available metrics
+  source: aws
+  source_url: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/viewing_metrics_with_cloudwatch.html
+  document_type: technical_documentation
+  version: latest
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - cloudwatch
+  - metrics
+  license: AWS Documentation Terms (proprietary; fetched locally, never redistributed)
+- document_id: k8s-pods
+  title: Pods
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/workloads/pods/_index.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - pods
+  license: CC-BY-4.0
+- document_id: k8s-pod-lifecycle
+  title: Pod Lifecycle
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/workloads/pods/pod-lifecycle.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - pods
+  - lifecycle
+  - crashloopbackoff
+  license: CC-BY-4.0
+- document_id: k8s-deployments
+  title: Deployments
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/workloads/controllers/deployment.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - deployments
+  - rollout
+  license: CC-BY-4.0
+- document_id: k8s-services
+  title: Service
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/services-networking/service.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - services
+  - networking
+  license: CC-BY-4.0
+- document_id: k8s-dns
+  title: DNS for Services and Pods
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/services-networking/dns-pod-service.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - dns
+  - networking
+  license: CC-BY-4.0
+- document_id: k8s-network-policies
+  title: Network Policies
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/services-networking/network-policies.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - networkpolicy
+  - networking
+  license: CC-BY-4.0
+- document_id: k8s-kube-scheduler
+  title: Kubernetes Scheduler
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/scheduling-eviction/kube-scheduler.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - scheduling
+  license: CC-BY-4.0
+- document_id: k8s-assign-pod-node
+  title: Assigning Pods to Nodes
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/scheduling-eviction/assign-pod-node.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - scheduling
+  - affinity
+  - nodeselector
+  license: CC-BY-4.0
+- document_id: k8s-taints-tolerations
+  title: Taints and Tolerations
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/scheduling-eviction/taint-and-toleration.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - scheduling
+  - taints
+  license: CC-BY-4.0
+- document_id: k8s-pod-priority-preemption
+  title: Pod Priority and Preemption
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/scheduling-eviction/pod-priority-preemption.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - scheduling
+  - priority
+  license: CC-BY-4.0
+- document_id: k8s-node-pressure-eviction
+  title: Node-pressure Eviction
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/scheduling-eviction/node-pressure-eviction.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - eviction
+  - resources
+  license: CC-BY-4.0
+- document_id: k8s-resource-management
+  title: Resource Management for Pods and Containers
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/configuration/manage-resources-containers.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - resources
+  - requests
+  - limits
+  - cpu-throttling
+  - oomkilled
+  license: CC-BY-4.0
+- document_id: k8s-limit-range
+  title: Limit Ranges
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/policy/limit-range.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - resources
+  - limitrange
+  license: CC-BY-4.0
+- document_id: k8s-resource-quotas
+  title: Resource Quotas
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/policy/resource-quotas.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - resources
+  - quota
+  license: CC-BY-4.0
+- document_id: k8s-debug-pods
+  title: Debug Pods
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/tasks/debug/debug-application/debug-pods.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - troubleshooting
+  - pods
+  - pending
+  - crashloopbackoff
+  license: CC-BY-4.0
+- document_id: k8s-debug-running-pod
+  title: Debug Running Pods
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/tasks/debug/debug-application/debug-running-pod.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - troubleshooting
+  - pods
+  - ephemeral-containers
+  license: CC-BY-4.0
+- document_id: k8s-debug-service
+  title: Debug Services
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/tasks/debug/debug-application/debug-service.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - troubleshooting
+  - services
+  - networking
+  license: CC-BY-4.0
+- document_id: k8s-debug-cluster
+  title: Troubleshooting Clusters
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/tasks/debug/debug-cluster/_index.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - troubleshooting
+  - cluster
+  - nodes
+  license: CC-BY-4.0
+- document_id: k8s-probes
+  title: Configure Liveness, Readiness and Startup Probes
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - probes
+  - health
+  license: CC-BY-4.0
+- document_id: k8s-dns-debugging
+  title: Debugging DNS Resolution
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/tasks/administer-cluster/dns-debugging-resolution.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - dns
+  - troubleshooting
+  - coredns
+  license: CC-BY-4.0
+- document_id: k8s-logging
+  title: Logging Architecture
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/cluster-administration/logging.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - logging
+  - observability
+  license: CC-BY-4.0
+- document_id: k8s-hpa
+  title: Horizontal Pod Autoscaling
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - autoscaling
+  - hpa
+  license: CC-BY-4.0
+- document_id: k8s-persistent-volumes
+  title: Persistent Volumes
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/storage/persistent-volumes.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - storage
+  - pv
+  - pvc
+  license: CC-BY-4.0
+- document_id: k8s-secrets
+  title: Secrets
+  source: kubernetes
+  source_url: https://raw.githubusercontent.com/kubernetes/website/main/content/en/docs/concepts/configuration/secret.md
+  document_type: technical_documentation
+  version: '1.31'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - secrets
+  - security
+  license: CC-BY-4.0
+- document_id: tf-cli-import
+  title: Import existing resources (CLI)
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/import/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - import
+  - cli
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cmd-import
+  title: 'Command: import'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/commands/import.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - import
+  - cli
+  - command
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-language-import
+  title: Import blocks
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/import/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - import
+  - language
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-state
+  title: State
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/state/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-state-remote
+  title: Remote State
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/state/remote.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - remote
+  - backend
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-state-locking
+  title: State Locking
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/state/locking.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - locking
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cli-state
+  title: Manipulating State (CLI)
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/state/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - cli
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cli-state-recover
+  title: Recover state
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/state/recover.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - recovery
+  - troubleshooting
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cli-state-move
+  title: Move resources
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/state/move.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - refactoring
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cmd-state-rm
+  title: 'Command: state rm'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/commands/state/rm.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - command
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cmd-state-mv
+  title: 'Command: state mv'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/commands/state/mv.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - command
+  - refactoring
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cmd-force-unlock
+  title: 'Command: force-unlock'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/commands/force-unlock.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - state
+  - locking
+  - command
+  - troubleshooting
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-providers
+  title: Providers
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/providers/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - providers
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-provider-requirements
+  title: Provider Requirements
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/providers/requirements.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - providers
+  - versions
+  - lock-file
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-modules
+  title: Modules
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/modules/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - modules
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-module-sources
+  title: Module Sources
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/modules/sources.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - modules
+  - sources
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-depends-on
+  title: The depends_on Meta-Argument
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/meta-arguments/depends_on.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - dependencies
+  - meta-arguments
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-lifecycle
+  title: The lifecycle Meta-Argument
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/meta-arguments/lifecycle.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - lifecycle
+  - prevent-destroy
+  - meta-arguments
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-resources
+  title: Resources
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/resources/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - resources
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-backend
+  title: Backend configuration
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/backend/index.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - backend
+  - state
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-backend-s3
+  title: 'Backend: s3'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/language/backend/s3.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - backend
+  - s3
+  - dynamodb
+  - locking
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cmd-plan
+  title: 'Command: plan'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/commands/plan.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - plan
+  - command
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cmd-apply
+  title: 'Command: apply'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/commands/apply.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - apply
+  - command
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-cmd-taint
+  title: 'Command: taint'
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/cli/commands/taint.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - taint
+  - command
+  - replace
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)
+- document_id: tf-internals-graph
+  title: Resource Graph
+  source: terraform
+  source_url: https://raw.githubusercontent.com/hashicorp/web-unified-docs/main/content/terraform/v1.16.x/docs/internals/graph.mdx
+  document_type: technical_documentation
+  version: '1.16'
+  environment: all
+  permissions:
+  - developer
+  - platform-engineer
+  - security-admin
+  status: active
+  created_at: '2026-09-14'
+  updated_at: '2026-09-14'
+  tags:
+  - dependencies
+  - graph
+  - internals
+  license: BUSL-1.1 (HashiCorp web-unified-docs; fetched locally, never redistributed)

@@ -44,6 +44,16 @@ fmt: ## Auto-format Python
 typecheck: ## mypy --strict
 	uv run mypy
 
+# ---------------------------------------------------------------- corpus
+corpus-fetch: ## Fetch public docs into data/sources/raw (gitignored)
+	uv run python apps/ingestion/fetch_sources.py
+
+corpus-manifest: ## Validate corpus and write data/manifest.json
+	uv run python apps/ingestion/build_manifest.py
+
+corpus-check: ## Validate corpus; fail if manifest is stale (CI)
+	uv run python apps/ingestion/build_manifest.py --check
+
 # ---------------------------------------------------------------- web
 web-install: ## Install frontend deps
 	cd $(WEB) && pnpm install --frozen-lockfile
@@ -68,7 +78,8 @@ docker-lint: ## hadolint Dockerfiles
 	hadolint docker/*.Dockerfile
 
 # ---------------------------------------------------------------- everything
-check: lint typecheck test web-lint tf-check ## Everything CI runs (minus Playwright)
+check: lint typecheck test corpus-check web-lint tf-check ## Everything CI runs (minus Playwright)
 
 .PHONY: help up down nuke logs install api test test-integration lint fmt typecheck \
+        corpus-fetch corpus-manifest corpus-check \
         web-install web-dev web-build web-lint web-test tf-check docker-lint check
