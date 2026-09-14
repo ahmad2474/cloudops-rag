@@ -9,12 +9,15 @@ async def test_health_reports_version(client: AsyncClient) -> None:
     assert r.json() == {"status": "ok", "version": __version__}
 
 
-async def test_ready_with_stub_search_is_ready(client: AsyncClient) -> None:
+async def test_ready_is_degraded_with_empty_index_but_reachable_search(
+    client: AsyncClient,
+) -> None:
     r = await client.get("/ready")
-    assert r.status_code == 200
+    assert r.status_code == 200  # reachable → 200; empty index → degraded, not 503
     body = r.json()
-    assert body["status"] == "ready"
+    assert body["status"] == "degraded"
     assert body["search"] is True
+    assert body["index"] == {"chunks": 0, "parents": 0}
     assert body["providers"]["llm"].startswith("stub:")
 
 

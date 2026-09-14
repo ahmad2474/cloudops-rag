@@ -4,7 +4,7 @@ Keep these minimal. Method signatures grow in later phases (BM25, hybrid, rerank
 streaming) — extend them deliberately and update every implementation in the same change.
 """
 
-from collections.abc import Sequence
+from collections.abc import AsyncIterator, Sequence
 from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -60,12 +60,26 @@ class LLMResult(BaseModel):
     model: str = ""
 
 
+class StreamEvent(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    delta: str = ""
+    done: bool = False
+    result: LLMResult | None = None
+
+
 @runtime_checkable
 class LLMProvider(Protocol):
     @property
     def model(self) -> str: ...
 
     async def generate(self, system: str, user: str, *, max_tokens: int = 1024) -> LLMResult: ...
+
+    def generate_stream(
+        self, system: str, user: str, *, max_tokens: int = 1024
+    ) -> AsyncIterator[StreamEvent]:
+        """Yield text deltas, then exactly one final event carrying usage."""
+        ...
 
 
 @runtime_checkable

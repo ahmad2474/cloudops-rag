@@ -24,8 +24,8 @@ async def client(settings: Settings) -> AsyncIterator[AsyncClient]:
     app = create_app(settings, use_stub_search=True)
     async with app.router.lifespan_context(app):
         state = app.state.ctx
-        assert isinstance(state.providers.search, StubSearchProvider)
-        await seed_search(state.providers.search, state.providers.embedding)
+        assert isinstance(state.raw_providers.search, StubSearchProvider)
+        await seed_search(state.raw_providers.search, state.providers.embedding)
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
             yield c
 

@@ -7,11 +7,17 @@ to produce good results — only stable, inspectable ones.
 import hashlib
 import math
 import re
-from collections.abc import Sequence
+from collections.abc import AsyncIterator, Sequence
 from typing import Any
 
 from cloudops_rag.chunking.models import Chunk, ParentChunk
-from cloudops_rag.providers.base import LLMResult, RerankedItem, SearchFilters, SearchHit
+from cloudops_rag.providers.base import (
+    LLMResult,
+    RerankedItem,
+    SearchFilters,
+    SearchHit,
+    StreamEvent,
+)
 
 
 class StubEmbeddingProvider:
@@ -74,6 +80,15 @@ class StubLLMProvider:
             output_tokens=len(text.split()),
             model=self._model,
         )
+
+    async def generate_stream(
+        self, system: str, user: str, *, max_tokens: int = 1024
+    ) -> AsyncIterator[StreamEvent]:
+        res = await self.generate(system, user, max_tokens=max_tokens)
+        words = res.text.split(" ")
+        for i, w in enumerate(words):
+            yield StreamEvent(delta=w + (" " if i < len(words) - 1 else ""))
+        yield StreamEvent(done=True, result=res)
 
 
 class StubRerankerProvider:

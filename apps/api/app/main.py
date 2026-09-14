@@ -6,13 +6,18 @@ from fastapi import FastAPI
 from app.api.ask import router as ask_router
 from app.api.auth import router as auth_router
 from app.api.health import router as health_router
+from app.api.system import router as system_router
 from app.dependencies import AppState
-from app.middleware import RequestContextMiddleware
+from app.middleware import BodySizeLimitMiddleware, RequestContextMiddleware
+from app.problems import install_error_handlers
 from cloudops_rag import __version__
 from cloudops_rag.config import Settings, load_settings
 from cloudops_rag.errors import ConfigurationError
 from cloudops_rag.logging import configure_logging, get_logger
+from cloudops_rag.observability.records import RequestLedger
+from cloudops_rag.observability.resilience import TokenBucket
 from cloudops_rag.providers.registry import build_providers
+from cloudops_rag.providers.resilient import harden
 from cloudops_rag.security import TokenService, UserStore
 
 log = get_logger(__name__)
@@ -27,12 +32,16 @@ def create_app(settings: Settings | None = None, *, use_stub_search: bool = Fals
         problems = settings.validate_for_environment()
         if problems:
             raise ConfigurationError("; ".join(problems))
-        providers = build_providers(settings, use_stub_search=use_stub_search)
+        raw_providers = build_providers(settings, use_stub_search=use_stub_search)
+        providers = harden(raw_providers, settings)
         app.state.ctx = AppState(
             settings=settings,
             providers=providers,
+            raw_providers=raw_providers,
             users=UserStore.from_json(settings.auth_users),
             tokens=TokenService(settings.auth_secret, ttl_seconds=settings.auth_token_ttl_seconds),
+            ledger=RequestLedger(settings.request_ledger_size),
+            limiter=TokenBucket(settings.rate_limit_rpm),
         )
         log.info(
             "startup",
@@ -59,9 +68,12 @@ def create_app(settings: Settings | None = None, *, use_stub_search: bool = Fals
         docs_url="/docs" if settings.app_env != "aws" else None,
     )
     app.add_middleware(RequestContextMiddleware)
+    app.add_middleware(BodySizeLimitMiddleware, max_bytes=settings.max_request_bytes)
+    install_error_handlers(app)
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(ask_router)
+    app.include_router(system_router)
     return app
 
 

@@ -1,6 +1,8 @@
 """AnswerService: understand → retrieve → context → conflicts → generate → validate → grade."""
 
 import time
+from collections.abc import AsyncIterator
+from typing import Any
 
 from cloudops_rag.generation.citations import to_citation, validate_citations
 from cloudops_rag.generation.conflicts import conflict_note, detect_conflicts
@@ -12,7 +14,7 @@ from cloudops_rag.generation.prompts import ABSTAIN_TOKEN, SYSTEM_PROMPT, build_
 from cloudops_rag.generation.query import QueryPlan, decompose, plan_query
 from cloudops_rag.logging import get_logger
 from cloudops_rag.observability.pricing import estimate_cost_usd
-from cloudops_rag.providers.base import LLMProvider, SearchFilters
+from cloudops_rag.providers.base import LLMProvider, LLMResult, SearchFilters
 from cloudops_rag.retrieval.hybrid import HybridRetriever
 
 log = get_logger(__name__)
@@ -78,6 +80,78 @@ class AnswerService:
         )
         result = await self._llm.generate(SYSTEM_PROMPT, user_prompt, max_tokens=self._max_tokens)
         t_generated = time.perf_counter()
+        return self._finalise(
+            base, retrieval, sources, result, filters, t_start, t_retrieved, t_generated
+        )
+
+    async def stream(self, question: str, filters: SearchFilters) -> AsyncIterator[dict[str, Any]]:
+        """Yield SSE-shaped events: retrieval → text deltas → final validated response.
+
+        Deltas are raw model output; the ``done`` event carries the validated AnswerResponse
+        (citations checked, guard applied). Clients must render the final answer from ``done``.
+        """
+        t_start = time.perf_counter()
+        plan = await self._plan(question)
+        queries = plan.subqueries or [plan.query]
+        retrieval = await self._retriever.retrieve_many(queries, filters)
+        t_retrieved = time.perf_counter()
+        sources = build_context(retrieval.parents, self._budget)
+        conflicts = detect_conflicts(sources)
+        yield {
+            "event": "retrieval",
+            "trail": [s.model_dump(mode="json") for s in retrieval.trail],
+            "sources": [to_citation(s).model_dump(mode="json") for s in sources],
+            "conflicts": [c.model_dump(mode="json") for c in conflicts],
+            "query_plan": plan.model_dump(mode="json"),
+        }
+        base = {
+            "query": question,
+            "sources": [to_citation(s) for s in sources],
+            "trail": retrieval.trail,
+            "conflicts": conflicts,
+            "query_plan": plan.model_dump(mode="json"),
+        }
+        if not sources:
+            res = AnswerResponse(
+                **base,
+                status="no_authorized_evidence",
+                answer=NO_EVIDENCE_ANSWER,
+                citations=[],
+                usage=None,
+                latency_ms=_lat(t_start, t_retrieved, None),
+            )
+            yield {"event": "done", "response": res.model_dump(mode="json")}
+            return
+        user_prompt = build_user_prompt(
+            plan.query, sources, notes=conflict_note(conflicts), version_hint=plan.version_hint
+        )
+        result: LLMResult | None = None
+        async for ev in self._llm.generate_stream(
+            SYSTEM_PROMPT, user_prompt, max_tokens=self._max_tokens
+        ):
+            if ev.delta:
+                yield {"event": "delta", "text": ev.delta}
+            if ev.done:
+                result = ev.result
+        t_generated = time.perf_counter()
+        if result is None:
+            result = LLMResult(text="", model=self._llm.model)
+        res = self._finalise(
+            base, retrieval, sources, result, filters, t_start, t_retrieved, t_generated
+        )
+        yield {"event": "done", "response": res.model_dump(mode="json")}
+
+    def _finalise(
+        self,
+        base: dict[str, Any],
+        retrieval: Any,
+        sources: list[Any],
+        result: LLMResult,
+        filters: SearchFilters,
+        t_start: float,
+        t_retrieved: float,
+        t_generated: float,
+    ) -> AnswerResponse:
         usage = Usage(
             model=result.model,
             input_tokens=result.input_tokens,
@@ -87,6 +161,7 @@ class AnswerService:
             ),
         )
         raw = result.text.strip()
+        lat = _lat(t_start, t_retrieved, t_generated)
         if not raw or ABSTAIN_TOKEN in raw[:64]:
             log.info("answer", status="abstained", roles=filters.roles)
             return AnswerResponse(
@@ -95,9 +170,8 @@ class AnswerService:
                 answer=NO_EVIDENCE_ANSWER,
                 citations=[],
                 usage=usage,
-                latency_ms=_lat(t_start, t_retrieved, t_generated),
+                latency_ms=lat,
             )
-
         verdict = check_answer(raw, SYSTEM_PROMPT)
         if verdict.blocked:
             log.warning("answer_blocked", reasons=verdict.reasons, roles=filters.roles)
@@ -108,9 +182,8 @@ class AnswerService:
                 citations=[],
                 guard_reasons=verdict.reasons,
                 usage=usage,
-                latency_ms=_lat(t_start, t_retrieved, t_generated),
+                latency_ms=lat,
             )
-
         cleaned, citations, dropped = validate_citations(raw, sources)
         if not citations:
             log.info("answer", status="abstained", reason="no_valid_citations", dropped=dropped)
@@ -121,7 +194,7 @@ class AnswerService:
                 citations=[],
                 dropped_citations=dropped,
                 usage=usage,
-                latency_ms=_lat(t_start, t_retrieved, t_generated),
+                latency_ms=lat,
             )
         evidence = evidence_strength(retrieval, cleaned, citations)
         log.info(
@@ -129,7 +202,7 @@ class AnswerService:
             status="answered",
             citations=len(citations),
             dropped=len(dropped),
-            conflicts=len(conflicts),
+            conflicts=len(base["conflicts"]),
             evidence=evidence.label,
             input_tokens=usage.input_tokens,
             output_tokens=usage.output_tokens,
@@ -143,7 +216,7 @@ class AnswerService:
             dropped_citations=dropped,
             evidence=evidence,
             usage=usage,
-            latency_ms=_lat(t_start, t_retrieved, t_generated),
+            latency_ms=lat,
         )
 
     async def _plan(self, question: str) -> QueryPlan:

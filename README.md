@@ -25,7 +25,7 @@ make check          # lint + typecheck + tests + terraform validate
 | Path | Purpose |
 |---|---|
 | `src/cloudops_rag/` | Core library: providers, retrieval, chunking, generation, security, evaluation |
-| `apps/api/` | FastAPI service |
+| `apps/api/` | FastAPI service — see [`docs/api.md`](docs/api.md) |
 | `apps/web/` | Next.js operations console |
 | `apps/ingestion/` | Ingestion jobs |
 | `data/` | Synthetic Acme KB (115 docs), public-doc registry (108), manifest — see [`docs/ingestion.md`](docs/ingestion.md) |

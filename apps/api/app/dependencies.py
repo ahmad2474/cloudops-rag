@@ -4,9 +4,12 @@ from typing import Annotated
 from fastapi import Depends, Header, HTTPException, Request, status
 
 from cloudops_rag.config import Settings
+from cloudops_rag.errors import RateLimitedError
 from cloudops_rag.generation import AnswerService
 from cloudops_rag.ingestion.documents import ROLES, Role
 from cloudops_rag.logging import get_logger
+from cloudops_rag.observability.records import RequestLedger
+from cloudops_rag.observability.resilience import TokenBucket
 from cloudops_rag.providers.registry import Providers
 from cloudops_rag.retrieval import HybridRetriever, Strategy
 from cloudops_rag.retrieval.context_units import ContextMode
@@ -20,8 +23,11 @@ log = get_logger("api.auth")
 class AppState:
     settings: Settings
     providers: Providers
+    raw_providers: Providers  # unwrapped (no deadlines/retries) — for seeding in tests
     users: UserStore
     tokens: TokenService
+    ledger: RequestLedger
+    limiter: TokenBucket
 
     def retriever(
         self,
@@ -101,6 +107,18 @@ def get_principal(
 
 def get_roles(principal: Annotated[Principal, Depends(get_principal)]) -> list[Role]:
     return list(principal.roles)
+
+
+def rate_limited(
+    state: Annotated[AppState, Depends(get_state)],
+    principal: Annotated[Principal, Depends(get_principal)],
+) -> None:
+    import time
+
+    wait = state.limiter.take(principal.username, time.monotonic())
+    if wait > 0:
+        log.warning("rate_limited", user=principal.username, retry_after_s=round(wait, 2))
+        raise RateLimitedError(wait)
 
 
 Roles = Annotated[list[Role], Depends(get_roles)]

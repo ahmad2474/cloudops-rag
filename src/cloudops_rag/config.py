@@ -28,6 +28,16 @@ class Settings(BaseSettings):
     reranker_provider: ProviderName = "stub"
     reranker_model: str = "cohere.rerank-v3-5:0"
 
+    # --- production API (Phase 8) ----------------------------------------------------------
+    timeout_embed_s: float = Field(default=10.0, gt=0)
+    timeout_search_s: float = Field(default=10.0, gt=0)
+    timeout_rerank_s: float = Field(default=15.0, gt=0)
+    timeout_llm_s: float = Field(default=60.0, gt=0)
+    provider_retries: int = Field(default=3, ge=1, le=6)
+    rate_limit_rpm: int = Field(default=60, ge=1, le=10000)
+    max_request_bytes: int = Field(default=16_384, ge=1024)
+    request_ledger_size: int = Field(default=500, ge=10, le=10000)
+
     # --- auth -----------------------------------------------------------------------------
     # HS256 signing secret (>= 32 chars). Local default is deliberately obvious; override in prod.
     auth_secret: str = "local-dev-secret-change-me-please-32chars!!"

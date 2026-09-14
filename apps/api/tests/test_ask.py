@@ -1,24 +1,4 @@
-from collections.abc import AsyncIterator
-
-import pytest
-from httpx import ASGITransport, AsyncClient
-
-from app.main import create_app
-from cloudops_rag.config import Settings
-from cloudops_rag.providers.stub import StubSearchProvider
-from cloudops_rag.testing import seed_search
-
-
-@pytest.fixture
-async def seeded_client(settings: Settings) -> AsyncIterator[AsyncClient]:
-    app = create_app(settings, use_stub_search=True)
-    async with app.router.lifespan_context(app):
-        state = app.state.ctx
-        search = state.providers.search
-        assert isinstance(search, StubSearchProvider)
-        await seed_search(search, state.providers.embedding)
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
-            yield c
+from httpx import AsyncClient
 
 
 async def test_ask_returns_grounded_answer_with_citations(seeded_client: AsyncClient) -> None:

@@ -9,18 +9,34 @@ the event loop is never blocked and Bedrock's per-model TPS quotas aren't hammer
 
 import asyncio
 import json
-from collections.abc import Sequence
+from collections.abc import AsyncIterator, Sequence
 from typing import Any
 
 import boto3
 from botocore.config import Config
 
 from cloudops_rag.errors import ConfigurationError, ProviderError
-from cloudops_rag.providers.base import LLMResult, RerankedItem
+from cloudops_rag.providers.base import LLMResult, RerankedItem, StreamEvent
 
 _RETRY = Config(
     retries={"max_attempts": 6, "mode": "adaptive"}, read_timeout=60, connect_timeout=10
 )
+
+
+_RETRYABLE = (
+    "ThrottlingException",
+    "ServiceUnavailable",
+    "ModelNotReady",
+    "InternalServer",
+    "TooManyRequests",
+    "Timeout",
+    "ServiceQuotaExceeded",
+)
+
+
+def _provider_error(prefix: str, exc: Exception) -> ProviderError:
+    text = str(exc)
+    return ProviderError(f"{prefix}: {text}", retryable=any(k in text for k in _RETRYABLE))
 
 
 def _client(region: str, allow: bool, client: Any | None) -> Any:
@@ -66,7 +82,7 @@ class BedrockEmbeddingProvider:
                 contentType="application/json",
             )
         except Exception as exc:  # botocore raises many classes; keep provider boundary clean
-            raise ProviderError(f"bedrock embed failed: {exc}") from exc
+            raise _provider_error("bedrock embed failed", exc) from exc
         payload = json.loads(res["body"].read())
         emb = payload.get("embedding")
         if not isinstance(emb, list) or len(emb) != self._dimensions:
@@ -114,7 +130,7 @@ class BedrockRerankerProvider:
                 contentType="application/json",
             )
         except Exception as exc:
-            raise ProviderError(f"bedrock rerank failed: {exc}") from exc
+            raise _provider_error("bedrock rerank failed", exc) from exc
         payload = json.loads(res["body"].read())
         results = payload.get("results")
         if not isinstance(results, list):
@@ -158,7 +174,7 @@ class BedrockLLMProvider:
                 inferenceConfig={"maxTokens": max_tokens, "temperature": 0.0, "topP": 0.9},
             )
         except Exception as exc:
-            raise ProviderError(f"bedrock converse failed: {exc}") from exc
+            raise _provider_error("bedrock converse failed", exc) from exc
         parts = res.get("output", {}).get("message", {}).get("content", [])
         text = "".join(p.get("text", "") for p in parts)
         usage = res.get("usage", {})
@@ -171,3 +187,43 @@ class BedrockLLMProvider:
 
     async def generate(self, system: str, user: str, *, max_tokens: int = 1024) -> LLMResult:
         return await asyncio.to_thread(self._converse, system, user, max_tokens)
+
+    def _converse_stream(self, system: str, user: str, max_tokens: int) -> Any:
+        try:
+            return self._client.converse_stream(
+                modelId=self._model,
+                system=[{"text": system}],
+                messages=[{"role": "user", "content": [{"text": user}]}],
+                inferenceConfig={"maxTokens": max_tokens, "temperature": 0.0, "topP": 0.9},
+            )["stream"]
+        except Exception as exc:
+            raise _provider_error("bedrock converse_stream failed", exc) from exc
+
+    async def generate_stream(
+        self, system: str, user: str, *, max_tokens: int = 1024
+    ) -> AsyncIterator[StreamEvent]:
+        stream = await asyncio.to_thread(self._converse_stream, system, user, max_tokens)
+        it = iter(stream)
+        text_parts: list[str] = []
+        usage: dict[str, int] = {}
+        sentinel = object()
+        while True:
+            event: Any = await asyncio.to_thread(next, it, sentinel)
+            if event is sentinel:
+                break
+            if "contentBlockDelta" in event:
+                delta = event["contentBlockDelta"].get("delta", {}).get("text", "")
+                if delta:
+                    text_parts.append(delta)
+                    yield StreamEvent(delta=delta)
+            elif "metadata" in event:
+                usage = event["metadata"].get("usage", {})
+        yield StreamEvent(
+            done=True,
+            result=LLMResult(
+                text="".join(text_parts),
+                input_tokens=int(usage.get("inputTokens", 0)),
+                output_tokens=int(usage.get("outputTokens", 0)),
+                model=self._model,
+            ),
+        )

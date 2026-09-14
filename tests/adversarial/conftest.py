@@ -86,7 +86,7 @@ async def attacked(settings: Settings) -> AsyncIterator[tuple[AsyncClient, Compl
     app = create_app(settings, use_stub_search=True)
     async with app.router.lifespan_context(app):
         state = app.state.ctx
-        search = state.providers.search
+        search = state.raw_providers.search
         assert isinstance(search, StubSearchProvider)
         await seed_search(search, state.providers.embedding)
         for doc in load_adversarial_docs():

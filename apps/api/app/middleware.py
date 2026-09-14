@@ -1,4 +1,4 @@
-"""Assigns a request_id to every request, binds it to log context, echoes it in the response."""
+"""Request context (request_id, timing, structured access log) and request size limit."""
 
 import time
 import uuid
@@ -6,7 +6,7 @@ import uuid
 import structlog
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 
 from cloudops_rag.logging import get_logger
 
@@ -34,3 +34,24 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
             latency_ms=elapsed_ms,
         )
         return response
+
+
+class BodySizeLimitMiddleware(BaseHTTPMiddleware):
+    def __init__(self, app, max_bytes: int) -> None:  # type: ignore[no-untyped-def]
+        super().__init__(app)
+        self._max = max_bytes
+
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+        length = request.headers.get("content-length")
+        if length and length.isdigit() and int(length) > self._max:
+            return JSONResponse(
+                status_code=413,
+                content={
+                    "type": "about:blank",
+                    "title": "Payload too large",
+                    "status": 413,
+                    "detail": f"request body exceeds {self._max} bytes",
+                },
+                media_type="application/problem+json",
+            )
+        return await call_next(request)
