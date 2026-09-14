@@ -1,11 +1,14 @@
-"""AnswerService: retrieve → build context → generate → validate citations → abstain if needed."""
+"""AnswerService: understand → retrieve → context → conflicts → generate → validate → grade."""
 
 import time
 
 from cloudops_rag.generation.citations import to_citation, validate_citations
+from cloudops_rag.generation.conflicts import conflict_note, detect_conflicts
 from cloudops_rag.generation.context import build_context
+from cloudops_rag.generation.evidence import evidence_strength
 from cloudops_rag.generation.models import AnswerResponse, Usage
 from cloudops_rag.generation.prompts import ABSTAIN_TOKEN, SYSTEM_PROMPT, build_user_prompt
+from cloudops_rag.generation.query import QueryPlan, decompose, plan_query
 from cloudops_rag.logging import get_logger
 from cloudops_rag.observability.pricing import estimate_cost_usd
 from cloudops_rag.providers.base import LLMProvider, SearchFilters
@@ -26,23 +29,30 @@ class AnswerService:
         *,
         context_token_budget: int = 6000,
         max_tokens: int = 1024,
+        query_understanding: str = "rules",
     ) -> None:
         self._retriever = retriever
         self._llm = llm
         self._budget = context_token_budget
         self._max_tokens = max_tokens
+        self._qu = query_understanding
 
     async def ask(self, question: str, filters: SearchFilters) -> AnswerResponse:
         t_start = time.perf_counter()
-        retrieval = await self._retriever.retrieve(question, filters)
+        plan = await self._plan(question)
+        queries = plan.subqueries or [plan.query]
+        retrieval = await self._retriever.retrieve_many(queries, filters)
         t_retrieved = time.perf_counter()
 
         sources = build_context(retrieval.parents, self._budget)
+        conflicts = detect_conflicts(sources)
         offered = [to_citation(s) for s in sources]
         base = {
             "query": question,
             "sources": offered,
             "trail": retrieval.trail,
+            "conflicts": conflicts,
+            "query_plan": plan.model_dump(mode="json"),
         }
         if not sources:
             log.info("answer", status="no_authorized_evidence", roles=filters.roles)
@@ -55,9 +65,13 @@ class AnswerService:
                 latency_ms=_lat(t_start, t_retrieved, None),
             )
 
-        result = await self._llm.generate(
-            SYSTEM_PROMPT, build_user_prompt(question, sources), max_tokens=self._max_tokens
+        user_prompt = build_user_prompt(
+            plan.query,
+            sources,
+            notes=conflict_note(conflicts),
+            version_hint=plan.version_hint,
         )
+        result = await self._llm.generate(SYSTEM_PROMPT, user_prompt, max_tokens=self._max_tokens)
         t_generated = time.perf_counter()
         usage = Usage(
             model=result.model,
@@ -81,8 +95,6 @@ class AnswerService:
 
         cleaned, citations, dropped = validate_citations(raw, sources)
         if not citations:
-            # An uncited answer is ungrounded by definition; treat as abstention rather than
-            # return unverifiable text.
             log.info("answer", status="abstained", reason="no_valid_citations", dropped=dropped)
             return AnswerResponse(
                 **base,
@@ -93,11 +105,14 @@ class AnswerService:
                 usage=usage,
                 latency_ms=_lat(t_start, t_retrieved, t_generated),
             )
+        evidence = evidence_strength(retrieval, cleaned, citations)
         log.info(
             "answer",
             status="answered",
             citations=len(citations),
             dropped=len(dropped),
+            conflicts=len(conflicts),
+            evidence=evidence.label,
             input_tokens=usage.input_tokens,
             output_tokens=usage.output_tokens,
             cost_usd=usage.estimated_cost_usd,
@@ -108,9 +123,16 @@ class AnswerService:
             answer=cleaned,
             citations=citations,
             dropped_citations=dropped,
+            evidence=evidence,
             usage=usage,
             latency_ms=_lat(t_start, t_retrieved, t_generated),
         )
+
+    async def _plan(self, question: str) -> QueryPlan:
+        plan = plan_query(question)
+        if self._qu == "llm":
+            plan = await decompose(plan, self._llm)
+        return plan
 
 
 def _lat(t0: float, t1: float, t2: float | None) -> dict[str, float]:

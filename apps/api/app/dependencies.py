@@ -42,6 +42,7 @@ class AppState:
             self.providers.llm,
             context_token_budget=self.settings.context_token_budget,
             max_tokens=self.settings.llm_max_tokens,
+            query_understanding=self.settings.query_understanding,
         )
 
 

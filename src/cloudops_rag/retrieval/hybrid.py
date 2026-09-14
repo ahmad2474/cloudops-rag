@@ -147,6 +147,29 @@ class HybridRetriever:
         )
         return RetrievalResult(query=query, hits=top, parents=parents, trail=trail)
 
+    async def retrieve_many(self, queries: list[str], filters: SearchFilters) -> RetrievalResult:
+        """Run each query, merge child rankings with RRF, then expand once. For decomposition."""
+        if len(queries) == 1:
+            return await self.retrieve(queries[0], filters)
+        results = await asyncio.gather(*(self.retrieve(q, filters) for q in queries))
+        t0 = time.perf_counter()
+        by_id = {h.chunk.chunk_id: h for r in results for h in r.hits}
+        fused = rrf([[h.chunk.chunk_id for h in r.hits] for r in results], k=self._rrf_k)
+        top = [SearchHit(chunk=by_id[cid].chunk, score=s) for cid, s in fused][: self._top_k]
+        parents = await build_units(
+            top, self._search, mode=self._context_mode, window=self._context_window
+        )
+        trail: list[TrailStep] = [s for r in results for s in r.trail]
+        trail.append(
+            TrailStep(
+                stage="merge_subqueries",
+                count=len(top),
+                latency_ms=_ms(t0),
+                detail={"subqueries": len(queries), "units": len(parents)},
+            )
+        )
+        return RetrievalResult(query=" | ".join(queries), hits=top, parents=parents, trail=trail)
+
     async def _vector(
         self, query: str, filters: SearchFilters, trail: list[TrailStep]
     ) -> list[SearchHit]:

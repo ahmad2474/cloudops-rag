@@ -9,6 +9,7 @@ ProviderName = Literal["stub", "bedrock"]
 SearchProviderName = Literal["opensearch"]
 RetrievalStrategy = Literal["vector", "bm25", "hybrid_rrf", "hybrid_weighted"]
 ContextMode = Literal["parent", "child", "child_window"]
+QueryUnderstanding = Literal["rules", "llm"]
 
 
 class Settings(BaseSettings):
@@ -48,6 +49,7 @@ class Settings(BaseSettings):
     context_token_budget: int = Field(default=6000, ge=500, le=64000)
     context_mode: ContextMode = "parent"
     context_window: int = Field(default=1, ge=0, le=5, description="siblings each side")
+    query_understanding: QueryUnderstanding = "rules"
     chunk_target_tokens: int = Field(default=400, ge=100, le=2000)
 
     @field_validator("embedding_dimensions")

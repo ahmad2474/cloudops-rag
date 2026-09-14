@@ -11,8 +11,8 @@ Work stops at the end of each phase for review. Do not auto-advance.
 | 3 | Evaluation | **tooling done; baseline run pending Bedrock entitlement** | 300+ questions, baseline Recall@K/MRR/NDCG/faithfulness/citation/latency/cost recorded |
 | 4 | Retrieval engineering | **done** (benchmarks pending Bedrock) | BM25 + hybrid fusion (RRF & weighted) + metadata filters + reranking, each benchmarked |
 | 5 | Parent-child | **done** (context modes measurable; generation comparison pending Bedrock) | child retrieval → parent expansion → context assembly, benchmarked |
-| 6 | Generation | **next** | query understanding, citation enforcement, abstention, conflict detection |
-| 7 | Security | pending | auth, roles, ACL filtering at search time, injection defense, adversarial tests |
+| 6 | Generation | **done** | query understanding, citation enforcement, abstention, conflict detection |
+| 7 | Security | **next** | auth, roles, ACL filtering at search time, injection defense, adversarial tests |
 | 8 | Production API | pending | request IDs, structured logs, timeouts, retries, rate limiting, streaming, health |
 | 9 | UI | pending | Search/Answer, Sources, Incidents, Explorer, Evaluation, System status |
 | 10 | AWS (Terraform) | pending | S3, OpenSearch t3.small, EC2, IAM, CloudWatch, Bedrock perms — plan → cost → approve → apply |

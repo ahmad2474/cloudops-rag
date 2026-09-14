@@ -24,6 +24,27 @@ question ─┬─▶ embed_query ─▶ kNN (k=50, filtered) ──┐
 - Trail stages: `embed_query, vector_search, bm25_search, fusion{method, overlap}, rerank{pool},
   select_top_k, parent_expansion`.
 
+## Phase 6 — generation: query understanding, conflicts, evidence strength
+
+```
+question ─▶ plan_query (rules; optional LLM decomposition) ─▶ retrieve[_many] ─▶ context
+         ─▶ detect_conflicts (metadata) ─▶ prompt (+version hint, +source notes) ─▶ LLM
+         ─▶ validate citations ─▶ evidence_strength ─▶ AnswerResponse
+```
+
+- **Query plan** (`generation/query.py`): strips "ignore your instructions…" preambles from the
+  *question* (recorded as `stripped_injection`), extracts a version hint (`EKS 1.31`), incident
+  ids, and a document-type hint. `QUERY_UNDERSTANDING=llm` additionally asks the model to split
+  multi-part questions into 2–4 subqueries; results are merged by RRF (`merge_subqueries` trail step).
+- **Conflicts** (`generation/conflicts.py`): sources on the same topic (title-word containment ≥ 0.5)
+  are flagged when they differ in `version`, when one is `deprecated`, or when `updated_at` differs
+  by ≥ 1 year. The prompt gets a one-line "source note" naming the preferred source; the response
+  carries `conflicts[]` for the UI. Detection uses metadata only — never the content.
+- **Evidence strength** (`generation/evidence.py`, spec §28): `0.5·citation_coverage +
+  0.35·distinct_docs/3 + 0.15·(1 − top-2 score margin)` → high / medium / low / none. Reported in
+  `AnswerResponse.evidence` with its raw signals; it is not a model confidence.
+- Response also includes `query_plan` so the UI can show what was actually searched.
+
 ## Phase 5 — parent-child context modes
 
 Retrieval always ranks **children** (precision). `CONTEXT_MODE` decides what reaches the model:

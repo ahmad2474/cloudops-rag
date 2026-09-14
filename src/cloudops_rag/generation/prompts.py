@@ -29,14 +29,25 @@ Answering rules:
 """
 
 
-def build_user_prompt(question: str, sources: list[ContextSource]) -> str:
+def build_user_prompt(
+    question: str,
+    sources: list[ContextSource],
+    *,
+    notes: str = "",
+    version_hint: str | None = None,
+) -> str:
     blocks = [f"{source_header(s)}\n{s.content}" for s in sources]
     joined = "\n\n".join(blocks) if blocks else "(no sources)"
+    hint = (
+        f"\nThe question concerns version {version_hint}; ignore sources for other versions."
+        if version_hint
+        else ""
+    )
     return f"""Sources:
 
-{joined}
+{joined}{notes}
 
 ---
-Question: {question}
+Question: {question}{hint}
 
 Answer with citations, or reply {ABSTAIN_TOKEN} if the sources are insufficient."""

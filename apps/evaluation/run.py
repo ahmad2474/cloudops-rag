@@ -139,6 +139,7 @@ async def main() -> int:
             providers.llm,
             context_token_budget=settings.context_token_budget,
             max_tokens=settings.llm_max_tokens,
+            query_understanding=settings.query_understanding,
         )
     judge = providers.llm if args.judge else None
     if args.judge and settings.llm_provider == "stub":
