@@ -37,7 +37,6 @@ crash.log
 # Data (large / generated) — raw sources are fetched, not committed
 data/sources/raw/
 data/processed/
-evaluation/reports/*.json
 
 # OS / editor
 .DS_Store

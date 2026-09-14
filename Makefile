@@ -67,6 +67,16 @@ ask: ## Ask the running API: make ask Q="why are pods pending" ROLE=developer
 	@curl -s localhost:8000/ask -H 'content-type: application/json' -H "X-Acme-Role: $${ROLE:-developer}" \
 	  -d "{\"question\": \"$(Q)\"}" | jq '{status, answer, citations: [.citations[] | {sid, document_id, section}], trail: [.trail[] | "\(.stage)=\(.count)"], latency_ms, usage}'
 
+# ---------------------------------------------------------------- evaluation
+eval-dataset: ## Rebuild data/evaluation/dataset.json from apps/evaluation/build_dataset.py
+	uv run python apps/evaluation/build_dataset.py
+
+eval: ## Retrieval-only evaluation (cheap): make eval STRATEGY=vector
+	uv run python apps/evaluation/run.py --strategy $${STRATEGY:-vector}
+
+eval-full: ## Retrieval + generation + LLM-judge faithfulness (costs LLM tokens)
+	uv run python apps/evaluation/run.py --strategy $${STRATEGY:-vector} --judge
+
 # ---------------------------------------------------------------- web
 web-install: ## Install frontend deps
 	cd $(WEB) && pnpm install --frozen-lockfile
@@ -95,4 +105,5 @@ check: lint typecheck test corpus-check web-lint tf-check ## Everything CI runs 
 
 .PHONY: help up down nuke logs install api test test-integration lint fmt typecheck \
         corpus-fetch corpus-manifest corpus-check index-plan index index-full ask \
+        eval-dataset eval eval-full \
         web-install web-dev web-build web-lint web-test tf-check docker-lint check
