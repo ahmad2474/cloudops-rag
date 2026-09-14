@@ -268,6 +268,24 @@ wheels = [
 ]
 
 [[package]]
+name = "boto3-stubs"
+version = "1.43.93"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "botocore-stubs" },
+    { name = "types-s3transfer" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/38/9b/a4f6ec6883c025ed59c7102662a5faf89b1f07f2fd0b5266f3c8dec9c92d/boto3_stubs-1.43.93.tar.gz", hash = "sha256:7b74d3af10337280cf6adc266b2f733ce1b9d9248b5ef12ad570d84edefab84d", size = 104616, upload-time = "2026-09-11T19:44:43.58Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b1/16/c4f9fdcfd3e93e0c3ad5308663723e5c33d11584915e321200c08eeaaf87/boto3_stubs-1.43.93-py3-none-any.whl", hash = "sha256:1d9162d5994438382cee2b49ddf22b75970199008844a08e6def9a4c4cc9d2da", size = 71511, upload-time = "2026-09-11T19:44:38.326Z" },
+]
+
+[package.optional-dependencies]
+bedrock-runtime = [
+    { name = "mypy-boto3-bedrock-runtime" },
+]
+
+[[package]]
 name = "botocore"
 version = "1.35.99"
 source = { registry = "https://pypi.org/simple" }
@@ -279,6 +297,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7c/9c/1df6deceee17c88f7170bad8325aa91452529d683486273928eecfd946d8/botocore-1.35.99.tar.gz", hash = "sha256:1eab44e969c39c5f3d9a3104a0836c24715579a455f12b3979a31d7cde51b3c3", size = 13490969, upload-time = "2025-01-14T20:20:11.419Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fc/dd/d87e2a145fad9e08d0ec6edcf9d71f838ccc7acdd919acc4c0d4a93515f8/botocore-1.35.99-py3-none-any.whl", hash = "sha256:b22d27b6b617fc2d7342090d6129000af2efd20174215948c0d7ae2da0fab445", size = 13293216, upload-time = "2025-01-14T20:20:06.427Z" },
+]
+
+[[package]]
+name = "botocore-stubs"
+version = "1.43.67"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/3f/45/53d662227dc4787b2c854445ee7eb4751cb5d74cfb5c686a6ecbe1f94c17/botocore_stubs-1.43.67.tar.gz", hash = "sha256:853e74014a1f557055c4ffae5fb38d7c65c7c0520e1aab366cac41d5428f419d", size = 42846, upload-time = "2026-08-08T14:57:53.412Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4e/5e/bdbf19967898a032292da65a47d6e25b2eee55865db4e687f861d80b5602/botocore_stubs-1.43.67-py3-none-any.whl", hash = "sha256:c51262bac3341c1cda71f05fa01141fffd3990d7a92c7960e3b755c1bc830373", size = 67244, upload-time = "2026-08-08T14:57:52.01Z" },
 ]
 
 [[package]]
@@ -462,18 +489,23 @@ name = "cloudops-rag"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "boto3" },
     { name = "fastapi" },
     { name = "httpx" },
+    { name = "markdownify" },
     { name = "opensearch-py" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "pyyaml" },
     { name = "structlog" },
+    { name = "tiktoken" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "boto3-stubs", extra = ["bedrock-runtime"] },
     { name = "checkov" },
     { name = "mypy" },
     { name = "pre-commit" },
@@ -481,23 +513,29 @@ dev = [
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
     { name = "ruff" },
+    { name = "types-beautifulsoup4" },
     { name = "types-pyyaml" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "beautifulsoup4", specifier = ">=4.15.0" },
+    { name = "boto3", specifier = ">=1.35.49" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "httpx", specifier = ">=0.27" },
+    { name = "markdownify", specifier = ">=1.2.3" },
     { name = "opensearch-py", specifier = ">=2.7" },
     { name = "pydantic", specifier = ">=2.8" },
     { name = "pydantic-settings", specifier = ">=2.4" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "structlog", specifier = ">=24.4" },
+    { name = "tiktoken", specifier = ">=0.14.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "boto3-stubs", extras = ["bedrock-runtime"], specifier = ">=1.43.93" },
     { name = "checkov", specifier = ">=3.2" },
     { name = "mypy", specifier = ">=1.11" },
     { name = "pre-commit", specifier = ">=3.8" },
@@ -505,6 +543,7 @@ dev = [
     { name = "pytest-asyncio", specifier = ">=0.24" },
     { name = "pytest-cov", specifier = ">=5.0" },
     { name = "ruff", specifier = ">=0.6" },
+    { name = "types-beautifulsoup4", specifier = ">=4.12.0.20250516" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20260906" },
 ]
 
@@ -974,6 +1013,19 @@ wheels = [
 ]
 
 [[package]]
+name = "markdownify"
+version = "1.2.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/92/ab/d1297139c0e2ceb151ae564c8c4f57ac0155d8f1f8b4cbd5d6523c82ea36/markdownify-1.2.3.tar.gz", hash = "sha256:1a176f05522c8a2cb1dd3ab9d307dcdadbed5c26ae717855bfc42b3b6d38d937", size = 18852, upload-time = "2026-06-30T20:27:39.06Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/10/fa543d484e8b1199243fe20eedd02cc5af050edebce98a7293a5773df592/markdownify-1.2.3-py3-none-any.whl", hash = "sha256:a189a0bedfd14009030fde5f85bb6f77c56897cb839b5c25315dd7d4e3e290ba", size = 15732, upload-time = "2026-06-30T20:27:38.094Z" },
+]
+
+[[package]]
 name = "markupsafe"
 version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1041,6 +1093,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/a3/52/cb31e084bc0314a1e384bdd677a4b80e55af04ccac077545e2238b9d320a/mypy-2.3.1-cp312-cp312-win_amd64.whl", hash = "sha256:4c5095a327483591c94e0c8d3ef9e50d4ab1369b541eae007c1f23bc2a41f6bb", size = 11226359, upload-time = "2026-08-15T03:03:29.002Z" },
     { url = "https://files.pythonhosted.org/packages/7a/47/88fcf6217b43fa2da81a8c2611370af18141536a4f0294bbf98b457d456d/mypy-2.3.1-cp312-cp312-win_arm64.whl", hash = "sha256:bbfe022634a2a195406bd469e888d2eaf193b02ba7e607391cd7640374aaae3b", size = 10214707, upload-time = "2026-08-15T03:02:48.807Z" },
     { url = "https://files.pythonhosted.org/packages/8e/41/9675c7a1e78edecfba0b79e587a52594c56e189368261dc7b3a7fffb9527/mypy-2.3.1-py3-none-any.whl", hash = "sha256:6ed5c7e3419083268e5c9258bd1c1ef91af44a9e89374dbcaf37b775716e72eb", size = 2754338, upload-time = "2026-08-15T03:02:53.4Z" },
+]
+
+[[package]]
+name = "mypy-boto3-bedrock-runtime"
+version = "1.43.62"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/26/78/542f5804cf0f9e3c1ccbf30917eaa3b4b6002b91965de02d065d7441fc93/mypy_boto3_bedrock_runtime-1.43.62.tar.gz", hash = "sha256:beb70b08ef72cdfd5036bcd3270f2fbac0a2ce5e40f70dfc1d87c4f139d4d7ff", size = 31492, upload-time = "2026-07-31T19:54:15.291Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d9/b2/e3bff20acd290b909f1c28856d6d8d7984f7f7d5bda299d5957f64e97bb3/mypy_boto3_bedrock_runtime-1.43.62-py3-none-any.whl", hash = "sha256:603d9df54da5029fc0d0e3c09b6db33733af53182bee030c0c7af99e88ed3b39", size = 37865, upload-time = "2026-07-31T19:54:13.959Z" },
 ]
 
 [[package]]
@@ -1782,6 +1843,25 @@ wheels = [
 ]
 
 [[package]]
+name = "tiktoken"
+version = "0.14.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "regex" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/62/167a842aa0429d45f5e797354fd4343a96f6043d67d0513c675c7b8d36e6/tiktoken-0.14.0.tar.gz", hash = "sha256:231dec90efcdccf1b565a1416107736f1e09b1a08fe736ef9d6363e626d03874", size = 38898, upload-time = "2026-08-17T19:49:49.514Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8c/da/e273746b9d24a63c776bc60fba914351573ad9c575b52601eb5e60632564/tiktoken-0.14.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:8e947aefe98ef74cce94923f90e48c98fe34eb1ec0a6bfdfadfc5a96359bfc36", size = 1094408, upload-time = "2026-08-17T19:48:49.269Z" },
+    { url = "https://files.pythonhosted.org/packages/69/9f/fe6b1aca23331aa5271df5a4bd07bf68a7059254d47faee1b8272592a777/tiktoken-0.14.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:d6cebe67765569df3dafac8474e4eccf5c19d24140492567a5e58a11445732a4", size = 1038499, upload-time = "2026-08-17T19:48:50.666Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/35/e9f47647c9e163bd1de30fe1a491669b7248cfc67b7404c35c009a701e1a/tiktoken-0.14.0-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:7db45b98e94adf4173a5cd7422b150999a7ee11ff847783a14f6e1b80cc38cb6", size = 1186355, upload-time = "2026-08-17T19:48:51.93Z" },
+    { url = "https://files.pythonhosted.org/packages/51/11/9976ad86980a00cdef05e730a0127a2578a1bc6d11644d8d47246de2eb26/tiktoken-0.14.0-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:7896eea257fe497a2b7134474d909156c6744ce8da35bce88011a960e008aa0d", size = 1204197, upload-time = "2026-08-17T19:48:53.18Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/9c/7035b0bcfaa68d1ee4803fc5be5214ad865669b05bd20e7105ae8a18afc6/tiktoken-0.14.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:b950248272f1b303dc32986396e2dccfa10cf6d1e83ec8f0bba1776660305482", size = 1250635, upload-time = "2026-08-17T19:48:54.392Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/1d/69cabf18bed7f4366da076735816abce0d4db3fae491ae338a6612128777/tiktoken-0.14.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:3de75343041a1c57333b1e707ac8a9769738241d7d6a55d39e12cf84548337c6", size = 1316085, upload-time = "2026-08-17T19:48:55.525Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/bd/a2e884fb1402cba5be08836590320012b2d8ada0e2eef9911a64df4bcd2d/tiktoken-0.14.0-cp312-cp312-win_amd64.whl", hash = "sha256:087538c080e5ff421abd3a0785ed63c5111d06af98e6cd0d374dbe5969147ca3", size = 941208, upload-time = "2026-08-17T19:48:56.938Z" },
+]
+
+[[package]]
 name = "tqdm"
 version = "4.70.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1794,12 +1874,54 @@ wheels = [
 ]
 
 [[package]]
+name = "types-beautifulsoup4"
+version = "4.12.0.20250516"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "types-html5lib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/d1/32b410f6d65eda94d3dfb0b3d0ca151f12cb1dc4cef731dcf7cbfd8716ff/types_beautifulsoup4-4.12.0.20250516.tar.gz", hash = "sha256:aa19dd73b33b70d6296adf92da8ab8a0c945c507e6fb7d5db553415cc77b417e", size = 16628, upload-time = "2025-05-16T03:09:09.93Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7c/79/d84de200a80085b32f12c5820d4fd0addcbe7ba6dce8c1c9d8605e833c8e/types_beautifulsoup4-4.12.0.20250516-py3-none-any.whl", hash = "sha256:5923399d4a1ba9cc8f0096fe334cc732e130269541d66261bb42ab039c0376ee", size = 16879, upload-time = "2025-05-16T03:09:09.051Z" },
+]
+
+[[package]]
+name = "types-html5lib"
+version = "1.1.11.20260518"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "types-webencodings" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b8/5a/0c708d1b0d35ad48b6a223c77c4a882fd016b40c25becb082a92e02a9c00/types_html5lib-1.1.11.20260518.tar.gz", hash = "sha256:4f33c087cb1119d65c4c80eca4323c2b501f9eaf8af9616b8b732ed4d8eae8fa", size = 18420, upload-time = "2026-05-18T06:07:23.662Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4d/d0/b088b9f11eb69637d6826843f06caaff60247156735a25512922d3dc2c13/types_html5lib-1.1.11.20260518-py3-none-any.whl", hash = "sha256:9baa7912224ebb37027c5ccb7e3768e43ea47b1dfdd977e7ddc4b0a4a550584d", size = 24339, upload-time = "2026-05-18T06:07:22.876Z" },
+]
+
+[[package]]
 name = "types-pyyaml"
 version = "6.0.12.20260906"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/90/6e/abec85b9013db5b934b0280a6dd104904d84f7bcbaab2e2f3def87ac7463/types_pyyaml-6.0.12.20260906.tar.gz", hash = "sha256:f59c1cc05010b833d2d72287bbaa72610106b28d42d89a907313117faba85212", size = 18649, upload-time = "2026-09-06T06:35:35.362Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/15/c0/fc0644b7ddcfb969e95845837143cb5173ddd6e06ee4ba5fc493cd9329b7/types_pyyaml-6.0.12.20260906-py3-none-any.whl", hash = "sha256:bca893ff0d51df5c9053137d5d0e6ccd36e939a196356f1d5c16372422f5137b", size = 21282, upload-time = "2026-09-06T06:35:34.372Z" },
+]
+
+[[package]]
+name = "types-s3transfer"
+version = "0.16.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/fe/64/42689150509eb3e6e82b33ee3d89045de1592488842ddf23c56957786d05/types_s3transfer-0.16.0.tar.gz", hash = "sha256:b4636472024c5e2b62278c5b759661efeb52a81851cde5f092f24100b1ecb443", size = 13557, upload-time = "2025-12-08T08:13:09.928Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/98/27/e88220fe6274eccd3bdf95d9382918716d312f6f6cef6a46332d1ee2feff/types_s3transfer-0.16.0-py3-none-any.whl", hash = "sha256:1c0cd111ecf6e21437cb410f5cddb631bfb2263b77ad973e79b9c6d0cb24e0ef", size = 19247, upload-time = "2025-12-08T08:13:08.426Z" },
+]
+
+[[package]]
+name = "types-webencodings"
+version = "0.6.0.20260907"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/74/b83cf1d523516bc818ffe6fa7c2f5504e0eeee7c5c394ecc1b404f95fe92/types_webencodings-0.6.0.20260907.tar.gz", hash = "sha256:efa85bc5114419ed45aec227ca5051cca63fa3e2bd13fcf79017ee4107603efc", size = 7748, upload-time = "2026-09-07T06:43:22.142Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/42/e7/dc1ea506e123c437c4551c35498eaade289f52d7f7ddf3f77cf94f0675dc/types_webencodings-0.6.0.20260907-py3-none-any.whl", hash = "sha256:86dc9b5a14665b24d5d7d061149c8c3f50355243df5ef285bf816c2e2cc093d5", size = 8584, upload-time = "2026-09-07T06:43:21.177Z" },
 ]
 
 [[package]]

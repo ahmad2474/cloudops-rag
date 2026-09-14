@@ -25,7 +25,7 @@ Budget envelopes (targets, not promises):
 - **Never** create paid AWS resources without explicit user approval in the current conversation.
 - **Never** deploy a NAT Gateway. **Never** use OpenSearch Serverless as always-on. **Never** EKS, ALB+NLB+APIGW combos, Lambda sprawl.
 - Required flow: `terraform plan` → written cost estimate (hourly + expected-run-hours) → user approval → `terraform apply` → demo/benchmark → `terraform destroy` in the same session.
-- Phases 0–9 make **zero** AWS API calls. Any `boto3` client creation must be behind the provider abstraction and gated by `LLM_PROVIDER=bedrock` etc.
+- No AWS **infrastructure** before Phase 10. Bedrock API calls are allowed from Phase 2 but only behind the provider abstraction, with `ALLOW_AWS_CALLS=true`, and after a per-run cost estimate is approved (embedding the corpus, an eval run, changing model).
 - Before Phase 10: AWS Budgets alert at $50/$100/$130; `scripts/aws-cost-check.sh` prints month-to-date spend via Cost Explorer.
 - Embedding the corpus and running evaluation call Bedrock — estimate tokens × price *before* running, log actual cost after.
 - Dev loop stays local (Docker OpenSearch, stub providers). Bedrock is used for real embedding/generation only when the pipeline is otherwise verified.

@@ -54,6 +54,19 @@ corpus-manifest: ## Validate corpus and write data/manifest.json
 corpus-check: ## Validate corpus; fail if manifest is stale (CI)
 	uv run python apps/ingestion/build_manifest.py --check
 
+index-plan: ## Show what indexing would do + embedding token/cost estimate (no writes)
+	uv run python apps/ingestion/index_corpus.py --dry-run
+
+index: ## Incrementally index the corpus into OpenSearch
+	uv run python apps/ingestion/index_corpus.py
+
+index-full: ## Drop indices and re-embed everything (schema or model change)
+	uv run python apps/ingestion/index_corpus.py --drop --full
+
+ask: ## Ask the running API: make ask Q="why are pods pending" ROLE=developer
+	@curl -s localhost:8000/ask -H 'content-type: application/json' -H "X-Acme-Role: $${ROLE:-developer}" \
+	  -d "{\"question\": \"$(Q)\"}" | jq '{status, answer, citations: [.citations[] | {sid, document_id, section}], trail: [.trail[] | "\(.stage)=\(.count)"], latency_ms, usage}'
+
 # ---------------------------------------------------------------- web
 web-install: ## Install frontend deps
 	cd $(WEB) && pnpm install --frozen-lockfile
@@ -81,5 +94,5 @@ docker-lint: ## hadolint Dockerfiles
 check: lint typecheck test corpus-check web-lint tf-check ## Everything CI runs (minus Playwright)
 
 .PHONY: help up down nuke logs install api test test-integration lint fmt typecheck \
-        corpus-fetch corpus-manifest corpus-check \
+        corpus-fetch corpus-manifest corpus-check index-plan index index-full ask \
         web-install web-dev web-build web-lint web-test tf-check docker-lint check

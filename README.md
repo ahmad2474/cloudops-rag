@@ -4,7 +4,7 @@ Production-grade RAG for Cloud & Platform Engineering — hybrid retrieval, sema
 retrieval-time authorization, citation-grounded generation, first-class evaluation, and a
 deliberately designed operations console.
 
-> **Status:** Phase 1 (corpus) complete — 223-document manifest. No retrieval pipeline, no AWS resources yet.
+> **Status:** Phase 2 (baseline RAG) complete — parse → chunk (parent/child) → embed → OpenSearch → vector retrieval with retrieval-time ACL → grounded generation with validated citations. Verified locally with stub providers; Bedrock providers implemented, first real run pending cost approval. No AWS infrastructure.
 > See [`docs/PHASES.md`](docs/PHASES.md).
 
 ## Local development
@@ -13,7 +13,9 @@ deliberately designed operations console.
 make install        # uv sync + pre-commit
 make corpus-fetch   # pull public docs (gitignored)
 make up             # OpenSearch + Dashboards (Docker)
-make api            # FastAPI on :8000  → /health, /ready, /docs
+make index          # parse + chunk + embed + index the corpus (incremental)
+make api            # FastAPI on :8000  → /ask, /search, /health, /ready, /docs
+make ask Q="why are my EKS pods pending" ROLE=developer
 make web-dev        # Next.js on :3000
 make check          # lint + typecheck + tests + terraform validate
 ```

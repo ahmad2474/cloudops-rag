@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T12:48:48+00:00",
+  "generated_at": "2026-09-14T13:13:05+00:00",
   "documents": [
     {
       "metadata": {
@@ -1626,37 +1626,6 @@
       "path": "data/sources/raw/aws-s3-troubleshoot-403.html",
       "content_hash": "sha256:c8d55c5983c020e93342505b2c91342fcf540bb6027c8a7b2b1a615a34b40318",
       "word_count": 9103,
-      "fetched": true
-    },
-    {
-      "metadata": {
-        "document_id": "aws-s3-troubleshooting",
-        "title": "Troubleshooting Amazon S3",
-        "source": "aws",
-        "source_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/troubleshooting.html",
-        "document_type": "technical_documentation",
-        "version": "latest",
-        "environment": "all",
-        "permissions": [
-          "developer",
-          "platform-engineer",
-          "security-admin"
-        ],
-        "status": "active",
-        "supersedes": null,
-        "created_at": "2026-09-14",
-        "updated_at": "2026-09-14",
-        "tags": [
-          "s3",
-          "troubleshooting"
-        ],
-        "related": [],
-        "license": "AWS Documentation Terms (proprietary; fetched locally, never redistributed)",
-        "incident": null
-      },
-      "path": "data/sources/raw/aws-s3-troubleshooting.html",
-      "content_hash": "sha256:bfc61d6eb9e5e71c3e9bd74ee084f5b8b4e77d0382991beff5f40bb4212e59d0",
-      "word_count": 111,
       "fetched": true
     },
     {

@@ -15,7 +15,7 @@ async def test_ready_with_stub_search_is_ready(client: AsyncClient) -> None:
     body = r.json()
     assert body["status"] == "ready"
     assert body["search"] is True
-    assert body["providers"]["llm"] == "stub:stub-model"
+    assert body["providers"]["llm"].startswith("stub:")
 
 
 async def test_request_id_is_generated_and_echoed(client: AsyncClient) -> None:

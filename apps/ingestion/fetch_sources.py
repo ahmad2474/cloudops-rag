@@ -45,6 +45,8 @@ def fetch_one(client: httpx.Client, item: dict[str, Any], force: bool) -> str:
         return f"error: {exc}"
     if r.status_code != 200:
         return f"http {r.status_code}"
+    if len(r.content) < 2048:
+        return f"error: suspiciously small response ({len(r.content)} bytes) — redirect stub?"
     ext = _ext_for(r.headers.get("content-type", ""), url)
     for stale in RAW_DIR.glob(f"{doc_id}.*"):
         stale.unlink()

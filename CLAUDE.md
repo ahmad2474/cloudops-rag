@@ -43,7 +43,11 @@ The user has a **maximum AWS credit budget of $150** (hard ceiling) and $0 perso
   (`t3.small.search`) and only while needed.
 - Prefer local Docker development. AWS is for proving the system works in the cloud, then destroyed.
 - Destroy temporary AWS resources after experiments. No "I'll delete it later."
-- Phase 0–9 must make **zero** AWS API calls.
+- **No AWS infrastructure before Phase 10** (no OpenSearch domain, EC2, VPC, NAT, etc.).
+- **Bedrock API calls** (Titan embeddings, LLM, Cohere Rerank) are pay-per-call and part of the
+  runtime design from Phase 2. Each *new kind* of run (first corpus embedding, first eval run,
+  a bigger model) needs a token-based cost estimate and explicit approval first. Code-level
+  guard: `ALLOW_AWS_CALLS=true` must be set or Bedrock providers refuse to run.
 
 ## AI
 

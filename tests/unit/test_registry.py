@@ -5,8 +5,8 @@ from cloudops_rag.providers.stub import StubSearchProvider
 
 
 def test_registry_builds_stub_set() -> None:
-    p = build_providers(Settings(embedding_dimensions=16), use_stub_search=True)
-    assert p.embedding.dimensions == 16
+    p = build_providers(Settings(embedding_dimensions=256), use_stub_search=True)
+    assert p.embedding.dimensions == 256
     assert isinstance(p.search, StubSearchProvider)
 
 
