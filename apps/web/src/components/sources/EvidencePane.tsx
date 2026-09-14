@@ -80,8 +80,11 @@ export function EvidencePane({
 
   if (!src) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center">
-        <p className="max-w-xs text-sm text-text-secondary">Select a citation marker in the answer to open the section it was drawn from.</p>
+      <div className="flex h-full flex-col">
+        <header className="border-b border-border-subtle bg-surface-1 px-3 py-1.5 font-mono text-[11px] tracking-widest text-text-muted uppercase">evidence</header>
+        <div className="flex flex-1 items-center justify-center p-8 text-center">
+          <p className="max-w-xs text-sm text-text-secondary">The source the answer cites opens here. Select a citation marker in the answer to read the section it was drawn from.</p>
+        </div>
       </div>
     );
   }
@@ -102,6 +105,7 @@ export function EvidencePane({
     <div className="flex h-full min-h-0 flex-col" style={{ ["--tint" as string]: tint }}>
       <header className="border-b border-border-subtle px-3 py-2" style={{ background: `color-mix(in srgb, ${tint} 9%, var(--surface-1))` }}>
         <div className="flex items-center gap-2 font-mono text-[11px]">
+          <span className="tracking-widest text-text-muted uppercase">evidence</span>
           <span className="rounded-sm px-1.5 py-0.5 font-semibold" style={{ background: tint, color: "var(--surface-0)" }}>{src.sid}</span>
           <span className="text-text-muted">{idx + 1}/{sources.length}</span>
           <Pill tone={citedSids.has(src.sid) ? "ok" : "muted"}>{citedSids.has(src.sid) ? "cited" : "offered, not cited"}</Pill>

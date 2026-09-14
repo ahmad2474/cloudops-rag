@@ -67,13 +67,22 @@ class StubLLMProvider:
         if not blocks:
             text = "INSUFFICIENT_EVIDENCE"
         else:
-            lines = []
-            for idx, body in blocks[:3]:
-                first = re.split(
-                    r"(?<=[.!?])\s", body.strip().split("\n\n")[-1].strip(), maxsplit=1
-                )[0]
-                lines.append(f"{first[:200]} [S{idx}]")
-            text = "\n".join(lines)
+            lines: list[str] = []
+            for idx, block in blocks[:3]:
+                # Drop the header line ("Title — section · type · updated …"), then take the
+                # first prose sentence of the body that isn't a heading, code, or table row.
+                body = block.split("\n", 1)[1] if "\n" in block else ""
+                for para in body.split("\n\n"):
+                    p = para.strip()
+                    if not p or p.startswith(("#", "```", "|", "-", "*", "[")):
+                        continue
+                    first = re.split(r"(?<=[.!?])\s", p.replace("\n", " "), maxsplit=1)[0]
+                    if first:
+                        lines.append(f"{first[:220]} [S{idx}]")
+                        break
+            if lines:
+                lines.insert(0, f"Based on {len(lines)} of the {len(blocks)} sources offered:")
+            text = "\n".join(lines) if lines else "INSUFFICIENT_EVIDENCE"
         return LLMResult(
             text=text,
             input_tokens=len(user.split()) + len(system.split()),

@@ -23,10 +23,11 @@ export function ClaimLines({
   streaming: boolean;
 }) {
   return (
-    <ol className="font-sans text-[14px] leading-[var(--line-h)]" aria-label="Answer claims">
+    <ol className="py-2 font-sans text-[14.5px] leading-[var(--line-h)]" aria-label="Answer claims">
       {lines.map((l) => {
         const involved = conflicts.filter((c) => c.sids.some((s) => l.sids.includes(s)));
         const active = activeLine === l.n;
+        const lead = l.n === 1 && l.kind === "paragraph";
         return (
           <li key={l.n} className="group">
             <div
@@ -36,7 +37,7 @@ export function ClaimLines({
               <span className="select-none border-r border-border-subtle py-1 pr-2 text-right font-mono text-[11px] text-text-faint tabular-nums">
                 {String(l.n).padStart(2, "0")}
               </span>
-              <div className={`min-w-0 px-3 py-1 break-words ${l.kind === "heading" ? "font-medium text-text-primary" : l.kind === "table" ? "font-mono text-[12px] text-text-secondary" : "text-text-primary"} ${l.kind === "bullet" ? "pl-6 before:absolute before:-ml-3 before:text-text-muted before:content-['–']" : ""} relative`}>
+              <div className={`min-w-0 px-3 py-1 break-words ${lead ? "text-[16px] font-medium text-text-primary" : l.kind === "heading" ? "font-medium text-text-primary" : l.kind === "table" ? "font-mono text-[12px] text-text-secondary" : "text-text-primary"} ${l.kind === "bullet" ? "pl-6 before:absolute before:-ml-3 before:text-text-muted before:content-['–']" : ""} relative`}>
                 {l.kind === "code" ? (
                   <pre className="overflow-x-auto rounded-sm border border-border-subtle bg-surface-0 p-2 font-mono text-[12px] text-text-secondary">{l.inlines[0]?.value}</pre>
                 ) : (

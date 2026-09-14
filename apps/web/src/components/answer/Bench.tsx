@@ -177,7 +177,7 @@ export function Bench({ settings, registerQueryField }: { settings: BenchSetting
         {/* LEFT: the change request */}
         <section className="flex min-h-0 min-w-0 flex-col bg-surface-0" aria-label="Answer">
           <header className="flex items-center gap-2 border-b border-border-subtle bg-surface-1 px-3 py-1.5 font-mono text-[11px]">
-            <span className="tracking-widest text-text-muted uppercase">answer</span>
+            <span className="tracking-widest text-text-primary uppercase">answer</span>
             {response && (
               <Pill tone={response.status === "answered" ? "ok" : response.status === "abstained" ? "warn" : "danger"}>
                 {response.status.replaceAll("_", " ")}
