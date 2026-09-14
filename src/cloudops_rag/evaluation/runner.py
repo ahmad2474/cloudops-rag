@@ -71,6 +71,7 @@ class EvalRunner:
             ndcg_at_10=ndcg_at_k(ranked, relevant, 10) if scored else None,
             acl_violation=bool(set(ranked) & forbidden),
             retrieval_latency_ms=r_ms,
+            context_tokens=sum(p.token_count for p in ret.parents),
         )
         if self._answers is None:
             return ItemResult(**base)
@@ -133,6 +134,10 @@ class EvalRunner:
             summary=_block(results),
             by_category=by_cat,
             latency_ms=latency,
+            context={
+                "avg_tokens": mean([float(r.context_tokens) for r in results]),
+                "avg_units": mean([float(len(r.ranked_documents)) for r in results]),
+            },
             cost={
                 "total_usd": total_cost,
                 "per_query_usd": round(total_cost / len(results), 6) if results else 0.0,

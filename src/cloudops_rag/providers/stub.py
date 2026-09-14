@@ -181,6 +181,9 @@ class StubSearchProvider:
     async def get_parents(self, parent_ids: Sequence[str]) -> list[ParentChunk]:
         return [self._parents[p] for p in parent_ids if p in self._parents]
 
+    async def get_chunks(self, chunk_ids: Sequence[str]) -> list[Chunk]:
+        return [self._chunks[c][0] for c in chunk_ids if c in self._chunks]
+
     async def refresh(self) -> None:
         return None
 

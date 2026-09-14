@@ -59,3 +59,4 @@ _Pending the first Bedrock run (account entitlement)._ Table to be filled from
 | Hybrid RRF | | | | | |
 | Hybrid weighted | | | | | |
 | Hybrid + Cohere rerank | | | | | |
+| Hybrid + rerank + parent context (final) | | | | | |

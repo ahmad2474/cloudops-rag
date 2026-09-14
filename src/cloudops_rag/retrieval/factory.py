@@ -2,6 +2,7 @@
 
 from cloudops_rag.config import Settings
 from cloudops_rag.providers.registry import Providers
+from cloudops_rag.retrieval.context_units import ContextMode
 from cloudops_rag.retrieval.hybrid import HybridRetriever, Strategy
 
 
@@ -13,6 +14,7 @@ def make_retriever(
     rerank: bool | None = None,
     top_k: int | None = None,
     candidates: int | None = None,
+    context_mode: ContextMode | None = None,
 ) -> HybridRetriever:
     use_rerank = settings.rerank_enabled if rerank is None else rerank
     return HybridRetriever(
@@ -25,4 +27,6 @@ def make_retriever(
         rerank_candidates=settings.rerank_candidates,
         rrf_k=settings.fusion_rrf_k,
         vector_weight=settings.fusion_vector_weight,
+        context_mode=context_mode or settings.context_mode,
+        context_window=settings.context_window,
     )

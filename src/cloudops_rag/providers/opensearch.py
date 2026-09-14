@@ -203,6 +203,19 @@ class OpenSearchProvider:
         ]
         await async_bulk(self._client, actions, refresh=False, raise_on_error=True)
 
+    async def get_chunks(self, chunk_ids: Sequence[str]) -> list[Chunk]:
+        if not chunk_ids:
+            return []
+        res = await self._client.mget(
+            index=self.chunks_index,
+            body={"ids": list(chunk_ids)},
+            _source_excludes=["embedding"],
+        )
+        found = {
+            d["_id"]: Chunk.model_validate(d["_source"]) for d in res["docs"] if d.get("found")
+        }
+        return [found[c] for c in chunk_ids if c in found]
+
     async def refresh(self) -> None:
         await self._client.indices.refresh(index=f"{self.chunks_index},{self.parents_index}")
 

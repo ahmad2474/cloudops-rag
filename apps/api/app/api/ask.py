@@ -7,6 +7,7 @@ from cloudops_rag.generation.models import AnswerResponse
 from cloudops_rag.ingestion.documents import Role
 from cloudops_rag.providers.base import SearchFilters
 from cloudops_rag.retrieval import Strategy
+from cloudops_rag.retrieval.context_units import ContextMode
 from cloudops_rag.retrieval.models import TrailStep
 
 router = APIRouter(tags=["query"])
@@ -25,6 +26,7 @@ class AskRequest(BaseModel):
     filters: QueryFilters = Field(default_factory=QueryFilters)
     strategy: Strategy | None = Field(default=None, description="override configured strategy")
     rerank: bool | None = Field(default=None, description="override configured reranking")
+    context_mode: ContextMode | None = None
 
 
 class SearchRequest(BaseModel):
@@ -33,6 +35,7 @@ class SearchRequest(BaseModel):
     filters: QueryFilters = Field(default_factory=QueryFilters)
     strategy: Strategy | None = None
     rerank: bool | None = None
+    context_mode: ContextMode | None = None
 
 
 class SearchHitOut(BaseModel):
@@ -60,14 +63,14 @@ def _filters(roles: list[Role], f: QueryFilters) -> SearchFilters:
 @router.post("/ask", response_model=AnswerResponse)
 async def ask(body: AskRequest, roles: Roles, state: State) -> AnswerResponse:
     """Grounded answer with validated citations, or an explicit abstention."""
-    svc = state.answers(body.strategy, body.rerank)
+    svc = state.answers(body.strategy, body.rerank, body.context_mode)
     return await svc.ask(body.question, _filters(roles, body.filters))
 
 
 @router.post("/search", response_model=SearchResponse)
 async def search(body: SearchRequest, roles: Roles, state: State) -> SearchResponse:
     """Raw retrieval (no generation) — for the UI's explorer and for evaluation."""
-    retriever = state.retriever(body.strategy, body.rerank)
+    retriever = state.retriever(body.strategy, body.rerank, body.context_mode)
     res = await retriever.retrieve(body.query, _filters(roles, body.filters))
     return SearchResponse(
         query=body.query,

@@ -24,6 +24,20 @@ question ─┬─▶ embed_query ─▶ kNN (k=50, filtered) ──┐
 - Trail stages: `embed_query, vector_search, bm25_search, fusion{method, overlap}, rerank{pool},
   select_top_k, parent_expansion`.
 
+## Phase 5 — parent-child context modes
+
+Retrieval always ranks **children** (precision). `CONTEXT_MODE` decides what reaches the model:
+
+| mode | unit handed to the context builder | avg tokens for top-20 children (stub run) |
+|---|---|---:|
+| `child` | the retrieved chunk(s) only, grouped per parent | ~5.1k |
+| `child_window` | chunk ± `CONTEXT_WINDOW` siblings within the parent, in document order | ~8.3k |
+| `parent` (default) | the whole H2 section, deduped, best-child order | ~10.8k |
+
+Units keep the real `parent_id`/`child_ids`, so citations resolve identically in every mode.
+Per-request override: `context_mode` on `/ask` and `/search`; per run: `--context-mode`.
+The trail's `parent_expansion` step reports `mode`, `units`, `context_tokens`.
+
 ## Phase 2 — baseline (vector only)
 
 ```

@@ -15,6 +15,7 @@ from cloudops_rag.providers.base import (
     SearchHit,
     SearchProvider,
 )
+from cloudops_rag.retrieval.context_units import ContextMode, build_units
 from cloudops_rag.retrieval.fusion import rrf, weighted
 from cloudops_rag.retrieval.models import RetrievalResult, TrailStep
 
@@ -34,6 +35,8 @@ class HybridRetriever:
         rerank_candidates: int = 20,
         rrf_k: int = 60,
         vector_weight: float = 0.5,
+        context_mode: ContextMode = "parent",
+        context_window: int = 1,
     ) -> None:
         self._embedding = embedding
         self._search = search
@@ -44,10 +47,13 @@ class HybridRetriever:
         self._rerank_candidates = rerank_candidates
         self._rrf_k = rrf_k
         self._vector_weight = vector_weight
+        self._context_mode: ContextMode = context_mode
+        self._context_window = context_window
 
     @property
     def label(self) -> str:
-        return f"{self._strategy}{'+rerank' if self._reranker else ''}"
+        mode = "" if self._context_mode == "parent" else f"+{self._context_mode}"
+        return f"{self._strategy}{'+rerank' if self._reranker else ''}{mode}"
 
     async def retrieve(self, query: str, filters: SearchFilters) -> RetrievalResult:
         trail: list[TrailStep] = []
@@ -123,17 +129,20 @@ class HybridRetriever:
 
         # --- parent expansion ---------------------------------------------------------------
         t0 = time.perf_counter()
-        parent_ids: list[str] = []
-        for h in top:
-            if h.chunk.parent_id not in parent_ids:
-                parent_ids.append(h.chunk.parent_id)
-        parents = await self._search.get_parents(parent_ids)
+        parents = await build_units(
+            top, self._search, mode=self._context_mode, window=self._context_window
+        )
         trail.append(
             TrailStep(
                 stage="parent_expansion",
                 count=len(parents),
                 latency_ms=_ms(t0),
-                detail={"children": len(top), "deduped_parents": len(parent_ids)},
+                detail={
+                    "mode": self._context_mode,
+                    "children": len(top),
+                    "units": len(parents),
+                    "context_tokens": sum(p.token_count for p in parents),
+                },
             )
         )
         return RetrievalResult(query=query, hits=top, parents=parents, trail=trail)

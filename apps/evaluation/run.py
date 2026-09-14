@@ -80,6 +80,7 @@ async def main() -> int:
         help="retrieval strategy (default: RETRIEVAL_STRATEGY setting)",
     )
     p.add_argument("--rerank", action="store_true", help="enable reranking (RERANKER_PROVIDER)")
+    p.add_argument("--context-mode", default=None, choices=["parent", "child", "child_window"])
     p.add_argument("--generation", action="store_true")
     p.add_argument(
         "--judge", action="store_true", help="LLM-judge faithfulness (implies --generation)"
@@ -119,6 +120,7 @@ async def main() -> int:
         rerank=rerank,
         candidates=args.candidates,
         top_k=args.top_k,
+        context_mode=args.context_mode,
     )
     label = retriever.label
     provider_labels["reranker"] = (
@@ -127,7 +129,13 @@ async def main() -> int:
     answers = None
     if args.generation:
         answers = AnswerService(
-            make_retriever(providers, settings, strategy=strategy, rerank=rerank),
+            make_retriever(
+                providers,
+                settings,
+                strategy=strategy,
+                rerank=rerank,
+                context_mode=args.context_mode,
+            ),
             providers.llm,
             context_token_budget=settings.context_token_budget,
             max_tokens=settings.llm_max_tokens,

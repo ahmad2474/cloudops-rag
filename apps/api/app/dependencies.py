@@ -8,6 +8,7 @@ from cloudops_rag.generation import AnswerService
 from cloudops_rag.ingestion.documents import ROLES, Role
 from cloudops_rag.providers.registry import Providers
 from cloudops_rag.retrieval import HybridRetriever, Strategy
+from cloudops_rag.retrieval.context_units import ContextMode
 from cloudops_rag.retrieval.factory import make_retriever
 
 
@@ -17,15 +18,27 @@ class AppState:
     providers: Providers
 
     def retriever(
-        self, strategy: Strategy | None = None, rerank: bool | None = None
+        self,
+        strategy: Strategy | None = None,
+        rerank: bool | None = None,
+        context_mode: ContextMode | None = None,
     ) -> HybridRetriever:
-        return make_retriever(self.providers, self.settings, strategy=strategy, rerank=rerank)
+        return make_retriever(
+            self.providers,
+            self.settings,
+            strategy=strategy,
+            rerank=rerank,
+            context_mode=context_mode,
+        )
 
     def answers(
-        self, strategy: Strategy | None = None, rerank: bool | None = None
+        self,
+        strategy: Strategy | None = None,
+        rerank: bool | None = None,
+        context_mode: ContextMode | None = None,
     ) -> AnswerService:
         return AnswerService(
-            self.retriever(strategy, rerank),
+            self.retriever(strategy, rerank, context_mode),
             self.providers.llm,
             context_token_budget=self.settings.context_token_budget,
             max_tokens=self.settings.llm_max_tokens,
