@@ -1,0 +1,129 @@
+{
+  "title": "Choose the visual world for CloudOps Intelligence",
+  "question": "The roll assigned Review Bench (code-review diff view). Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Review Bench",
+      "kicker": "THE ROLL",
+      "lineage": "GitHub / Gerrit code review — split diff, gutter markers, review comments, status checks",
+      "thesis": "An answer is a change request: claims on the left, the evidence that justifies each on the right, and a checks line that says whether it may merge into your incident.",
+      "palette": ["#0e1013", "#1a1e25", "#e6e9ee", "#4fd1c5", "#e3b341", "#f0605d"],
+      "materials": ["graphite panes with hairline gutters", "monospace line-numbered evidence", "review-comment callouts", "check-run status pills"],
+      "viewport": "A top command bar (query field, role chip, strategy chip). Below, a two-pane bench: LEFT the answer as numbered claim lines with gutter markers [S1]…; RIGHT the cited section as a line-numbered evidence file with the supporting lines highlighted; between them hairline connectors from marker to lines. A CHECKS strip under the answer: Retrieval 42→38→20→6 · Citations 5/5 valid · Evidence strength HIGH · Conflicts 1 (as a review comment pinned to the claim it affects). Incidents and Explorer live as tabs in the bar, not a sidebar.",
+      "risk": "If the evidence pane is not genuinely line-addressable, it collapses into two columns of cards and the metaphor reads as decoration.",
+      "raised": [
+        {"from": "challenger-split-flap", "raise": "Ranked rows never reflow: the retrieval trail and incident list are column-locked tables whose rows change state in place (delayed → amber, withheld → dim red), never re-laid out."},
+        {"from": "challenger-ascii", "raise": "One ink, one ramp: evidence strength and rerank scores render as a single-hue luminance ramp on the accent, not a traffic light."},
+        {"from": "challenger-botanical", "raise": "Fixed-scale plates: every source card shares one exact scale and baseline so five sources compare at a glance; nothing grows because it ranked first."},
+        {"from": "challenger-miura", "raise": "Packet → sheet: the retrieval trail rests as a one-line packet under the answer and deploys in one pull into the full stage sheet, then folds back; no accordion of accordions."},
+        {"from": "challenger-racing", "raise": "Selection floods the readout: choosing a citation floods the evidence pane header and gutter with that source's tint so you always know which file you are reading."}
+      ],
+      "wireframe": {"cols": 12, "rows": 10, "regions": [
+        {"label": "command bar · query · role · strategy", "x": 0, "y": 0, "w": 12, "h": 1, "accent": true},
+        {"label": "answer · numbered claims · gutter [S#]", "x": 0, "y": 1, "w": 6, "h": 7},
+        {"label": "evidence file · line numbers · highlighted lines", "x": 6, "y": 1, "w": 6, "h": 7},
+        {"label": "checks: retrieval → citations → evidence → conflicts", "x": 0, "y": 8, "w": 12, "h": 1},
+        {"label": "trail packet (pull to deploy)", "x": 0, "y": 9, "w": 12, "h": 1}
+      ]}
+    },
+    {
+      "id": "model-pick",
+      "label": "Console Panes",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "k9s / htop / tmux — a TUI incident console",
+      "thesis": "The knowledge base as one more pane in the on-call engineer's terminal: everything keyboard-driven, everything monospace, status bar at the bottom.",
+      "palette": ["#0e1013", "#14171c", "#e6e9ee", "#4fd1c5", "#5fcf80"],
+      "materials": ["tmux-style pane borders", "bottom status bar with key hints", "monospace everything", "cursor-row highlight"],
+      "viewport": "Three tiled panes: query + answer (left, tall), sources (right top), trail/status (right bottom); a status bar shows role, strategy, latency, cost and the key bindings.",
+      "risk": "The most familiar direction for a developer-facing AI tool; many terminal-styled assistants exist, so it reads as expected rather than as this product.",
+      "wireframe": {"cols": 12, "rows": 10, "regions": [
+        {"label": "query + answer pane", "x": 0, "y": 0, "w": 7, "h": 9, "accent": true},
+        {"label": "sources pane", "x": 7, "y": 0, "w": 5, "h": 5},
+        {"label": "trail / cost pane", "x": 7, "y": 5, "w": 5, "h": 4},
+        {"label": "status bar · role · strategy · keys", "x": 0, "y": 9, "w": 12, "h": 1}
+      ]}
+    },
+    {
+      "id": "challenger-split-flap",
+      "label": "Departure Board",
+      "verdict": "competitive",
+      "lineage": "rail concourse split-flap board",
+      "thesis": "Every retrieval stage, source and incident is a ranked row on a board whose columns never move; state changes flip in place.",
+      "palette": ["#0b0b0c", "#f2f2f2", "#e3b341", "#c0392b"],
+      "materials": ["fixed-cell flap faces", "brushed frame", "amber delay lamps"],
+      "viewport": "A full-width board: rows are sources ranked by fused score, columns SID · title · section · version · score · state; the answer sits above as the board's headline line.",
+      "case": "Fuses well for lists (trail, incidents, sources) and holds product clarity there; loses audience identification — engineers don't read their tools as a concourse — and prose answers have no row to live in.",
+      "risk": "Per-character flip motion becomes noise on every update unless reserved for genuine state changes.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-split-flap-concourse-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/signals-instruments-split-flap-concourse.webp"
+    },
+    {
+      "id": "challenger-ascii",
+      "label": "Phosphor Glyph Grid",
+      "verdict": "declined",
+      "lineage": "ASCII live-scene rendering",
+      "palette": ["#000000", "#39ff88"],
+      "materials": ["single-ink phosphor", "glyph-density ramp"],
+      "case": "Novelty outranks clarity: an operator cannot read a runbook through a luminance ramp of glyphs.",
+      "kept": "One ink, one ramp — a single-hue luminance scale for scores instead of a traffic light.",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-ascii-live-scene-render-hero.webp"
+    },
+    {
+      "id": "challenger-botanical",
+      "label": "Botanical Folio",
+      "verdict": "declined",
+      "lineage": "botanical plate sequence",
+      "palette": ["#f3ead8", "#5b4636", "#2f6b3a", "#8b1a1a"],
+      "materials": ["cream plates", "hairline sepia rules", "engraved italics"],
+      "case": "Cream paper and engraved italics are the opposite of an incident console's physical scene (dark room, many tabs, 2 a.m.); loses both axes.",
+      "kept": "Fixed-scale plates on one baseline — sources compare because nothing changes size by rank.",
+      "hero": "https://impeccable.style/worlds/cards/editorial-sequence-montage-botanical-folio-season-hero.webp"
+    },
+    {
+      "id": "challenger-racing",
+      "label": "Racing League Livery",
+      "verdict": "declined",
+      "lineage": "anti-aliased racing league identity",
+      "palette": ["#2b2f36", "#ff6a00", "#d9ff00", "#ffffff"],
+      "materials": ["team decals", "extended caps", "horizontal streak"],
+      "case": "Speed livery contradicts the product's promise of calm, verifiable evidence; loses both axes.",
+      "kept": "Selection floods the readout — the chosen citation tints the evidence pane so the active file is unmistakable.",
+      "hero": "https://impeccable.style/worlds/cards/digital-design-canon-antialiased-racing-league-hero.webp"
+    },
+    {
+      "id": "challenger-miura",
+      "label": "Miura Fold",
+      "verdict": "declined",
+      "lineage": "deployable Miura-fold sheet",
+      "palette": ["#ffffff", "#c9a227", "#8a8a8a", "#9ec5e8"],
+      "materials": ["scored creases", "gold packet", "parallelogram grid"],
+      "case": "White paper and gold foil are a persuasion material, not an operator's; the crease grid fights tabular data. Loses both axes.",
+      "kept": "Packet → sheet deployment — the trail collapses to one line and opens in a single motion.",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-miura-orbit-sheet-hero.webp"
+    },
+    {
+      "id": "challenger-storm",
+      "label": "Alphabet Storm",
+      "verdict": "declined",
+      "lineage": "letters as weather",
+      "palette": ["#ffffff", "#000000", "#c0c0c0"],
+      "materials": ["monumental grotesk", "procedural particles"],
+      "case": "Type-as-weather cannot carry a citation, a role, or a table; loses both axes and offers no discipline this product lacks.",
+      "kept": "Nothing adopted.",
+      "hero": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-alphabet-storm-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "Sidebar of past queries, centered search, answer with numbered footnotes, source cards below — executed impeccably.",
+    "palette": ["#0f1115", "#e6e9ee", "#7c5cff"],
+    "materials": ["sidebar", "search box", "answer card", "source cards"],
+    "viewport": "Left sidebar; centered query field; answer card; row of source cards.",
+    "risk": "Indistinguishable from Perplexity/Glean-style tools by design — the arrangement the project specification explicitly warns against."
+  },
+  "steer": true
+}

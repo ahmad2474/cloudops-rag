@@ -20,6 +20,8 @@ def to_citation(src: ContextSource) -> Citation:
         version=p.version,
         updated_at=p.updated_at,
         excerpt=_excerpt(src.content),
+        content=src.content,
+        token_count=src.token_count,
     )
 
 

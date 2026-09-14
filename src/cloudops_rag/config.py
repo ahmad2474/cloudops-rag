@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     rate_limit_rpm: int = Field(default=60, ge=1, le=10000)
     max_request_bytes: int = Field(default=16_384, ge=1024)
     request_ledger_size: int = Field(default=500, ge=10, le=10000)
+    cors_origins: str = "http://localhost:3000"
 
     # --- auth -----------------------------------------------------------------------------
     # HS256 signing secret (>= 32 chars). Local default is deliberately obvious; override in prod.

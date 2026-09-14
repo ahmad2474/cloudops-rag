@@ -2,9 +2,12 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.ask import router as ask_router
 from app.api.auth import router as auth_router
+from app.api.documents import router as documents_router
+from app.api.evaluation import router as evaluation_router
 from app.api.health import router as health_router
 from app.api.system import router as system_router
 from app.dependencies import AppState
@@ -68,12 +71,21 @@ def create_app(settings: Settings | None = None, *, use_stub_search: bool = Fals
         docs_url="/docs" if settings.app_env != "aws" else None,
     )
     app.add_middleware(RequestContextMiddleware)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
+        allow_methods=["GET", "POST"],
+        allow_headers=["Authorization", "Content-Type", "X-Acme-Role", "X-Request-ID"],
+        expose_headers=["X-Request-ID", "Retry-After"],
+    )
     app.add_middleware(BodySizeLimitMiddleware, max_bytes=settings.max_request_bytes)
     install_error_handlers(app)
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(ask_router)
     app.include_router(system_router)
+    app.include_router(documents_router)
+    app.include_router(evaluation_router)
     return app
 
 

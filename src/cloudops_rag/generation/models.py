@@ -35,6 +35,8 @@ class Citation(BaseModel):
     version: str | None
     updated_at: str
     excerpt: str
+    content: str = Field(default="", description="the section text as offered to the model")
+    token_count: int = 0
 
 
 class Conflict(BaseModel):

@@ -46,3 +46,7 @@ data/processed/
 
 # Local
 /opensearch-data/
+
+# Impeccable design skill: native engine binary is downloaded per machine (npx impeccable install)
+.claude/skills/impeccable/scripts/bin/
+.claude/settings.local.json
