@@ -7,15 +7,29 @@ from cloudops_rag.config import Settings
 from cloudops_rag.generation import AnswerService
 from cloudops_rag.ingestion.documents import ROLES, Role
 from cloudops_rag.providers.registry import Providers
-from cloudops_rag.retrieval import VectorRetriever
+from cloudops_rag.retrieval import HybridRetriever, Strategy
+from cloudops_rag.retrieval.factory import make_retriever
 
 
 @dataclass(frozen=True)
 class AppState:
     settings: Settings
     providers: Providers
-    retriever: VectorRetriever
-    answers: AnswerService
+
+    def retriever(
+        self, strategy: Strategy | None = None, rerank: bool | None = None
+    ) -> HybridRetriever:
+        return make_retriever(self.providers, self.settings, strategy=strategy, rerank=rerank)
+
+    def answers(
+        self, strategy: Strategy | None = None, rerank: bool | None = None
+    ) -> AnswerService:
+        return AnswerService(
+            self.retriever(strategy, rerank),
+            self.providers.llm,
+            context_token_budget=self.settings.context_token_budget,
+            max_tokens=self.settings.llm_max_tokens,
+        )
 
 
 def get_state(request: Request) -> AppState:

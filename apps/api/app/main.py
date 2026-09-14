@@ -9,10 +9,8 @@ from app.dependencies import AppState
 from app.middleware import RequestContextMiddleware
 from cloudops_rag import __version__
 from cloudops_rag.config import Settings, load_settings
-from cloudops_rag.generation import AnswerService
 from cloudops_rag.logging import configure_logging, get_logger
 from cloudops_rag.providers.registry import build_providers
-from cloudops_rag.retrieval import VectorRetriever
 
 log = get_logger(__name__)
 
@@ -24,27 +22,15 @@ def create_app(settings: Settings | None = None, *, use_stub_search: bool = Fals
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         providers = build_providers(settings, use_stub_search=use_stub_search)
-        retriever = VectorRetriever(
-            providers.embedding,
-            providers.search,
-            candidates=settings.retrieval_candidates,
-            top_k=settings.retrieval_top_k,
-        )
-        answers = AnswerService(
-            retriever,
-            providers.llm,
-            context_token_budget=settings.context_token_budget,
-            max_tokens=settings.llm_max_tokens,
-        )
-        app.state.ctx = AppState(
-            settings=settings, providers=providers, retriever=retriever, answers=answers
-        )
+        app.state.ctx = AppState(settings=settings, providers=providers)
         log.info(
             "startup",
             app_env=settings.app_env,
             llm=f"{settings.llm_provider}:{settings.llm_model}",
             embedding=f"{settings.embedding_provider}:{settings.embedding_model}",
             search=settings.search_provider,
+            retrieval=settings.retrieval_strategy,
+            rerank=settings.rerank_enabled,
             allow_aws_calls=settings.allow_aws_calls,
         )
         try:

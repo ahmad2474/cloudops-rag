@@ -55,3 +55,7 @@ _Pending the first Bedrock run (account entitlement)._ Table to be filled from
 | Strategy | Recall@5 | Recall@10 | MRR | NDCG@10 | ACL viol. |
 |---|---:|---:|---:|---:|---:|
 | Vector (baseline) | | | | | |
+| BM25 | | | | | |
+| Hybrid RRF | | | | | |
+| Hybrid weighted | | | | | |
+| Hybrid + Cohere rerank | | | | | |

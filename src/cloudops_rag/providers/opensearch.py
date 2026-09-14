@@ -229,6 +229,31 @@ class OpenSearchProvider:
             for h in res["hits"]["hits"]
         ]
 
+    async def bm25_search(self, query: str, *, k: int, filters: SearchFilters) -> list[SearchHit]:
+        body = {
+            "size": k,
+            "_source": {"excludes": ["embedding"]},
+            "query": {
+                "bool": {
+                    "must": {
+                        "multi_match": {
+                            "query": query,
+                            "type": "best_fields",
+                            "fields": ["content^1.0", "content.exact^1.5", "title^0.8"],
+                            "operator": "or",
+                            "tie_breaker": 0.3,
+                        }
+                    },
+                    "filter": build_filter(filters),
+                }
+            },
+        }
+        res = await self._client.search(index=self.chunks_index, body=body)
+        return [
+            SearchHit(chunk=Chunk.model_validate(h["_source"]), score=float(h["_score"]))
+            for h in res["hits"]["hits"]
+        ]
+
     async def get_parents(self, parent_ids: Sequence[str]) -> list[ParentChunk]:
         if not parent_ids:
             return []

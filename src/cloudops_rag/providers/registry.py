@@ -10,7 +10,11 @@ from cloudops_rag.providers.base import (
     RerankerProvider,
     SearchProvider,
 )
-from cloudops_rag.providers.bedrock import BedrockEmbeddingProvider, BedrockLLMProvider
+from cloudops_rag.providers.bedrock import (
+    BedrockEmbeddingProvider,
+    BedrockLLMProvider,
+    BedrockRerankerProvider,
+)
 from cloudops_rag.providers.opensearch import OpenSearchProvider
 from cloudops_rag.providers.stub import (
     StubEmbeddingProvider,
@@ -74,5 +78,10 @@ def _build_llm(settings: Settings) -> LLMProvider:
 def _build_reranker(settings: Settings) -> RerankerProvider:
     if settings.reranker_provider == "stub":
         return StubRerankerProvider()
-    # Cohere Rerank via Bedrock lands in Phase 4 (retrieval engineering).
+    if settings.reranker_provider == "bedrock":
+        return BedrockRerankerProvider(
+            model=settings.reranker_model,
+            region=settings.aws_region,
+            allow_aws_calls=settings.allow_aws_calls,
+        )
     raise ProviderNotConfiguredError(f"reranker provider: {settings.reranker_provider}")

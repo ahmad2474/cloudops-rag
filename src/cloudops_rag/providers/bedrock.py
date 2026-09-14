@@ -16,7 +16,7 @@ import boto3
 from botocore.config import Config
 
 from cloudops_rag.errors import ConfigurationError, ProviderError
-from cloudops_rag.providers.base import LLMResult
+from cloudops_rag.providers.base import LLMResult, RerankedItem
 
 _RETRY = Config(
     retries={"max_attempts": 6, "mode": "adaptive"}, read_timeout=60, connect_timeout=10
@@ -82,6 +82,53 @@ class BedrockEmbeddingProvider:
 
     async def embed_query(self, text: str) -> list[float]:
         return await self._one(text)
+
+
+class BedrockRerankerProvider:
+    """Cohere Rerank 3.5 on Bedrock (``cohere.rerank-v3-5:0``) via InvokeModel."""
+
+    def __init__(
+        self,
+        model: str = "cohere.rerank-v3-5:0",
+        region: str = "us-east-1",
+        *,
+        allow_aws_calls: bool = False,
+        client: Any | None = None,
+    ) -> None:
+        self._model = model
+        self._client = _client(region, allow_aws_calls, client)
+
+    @property
+    def model(self) -> str:
+        return self._model
+
+    def _invoke(self, query: str, documents: Sequence[str], top_n: int) -> list[RerankedItem]:
+        body = json.dumps(
+            {"query": query, "documents": list(documents), "top_n": top_n, "api_version": 2}
+        )
+        try:
+            res = self._client.invoke_model(
+                modelId=self._model,
+                body=body,
+                accept="application/json",
+                contentType="application/json",
+            )
+        except Exception as exc:
+            raise ProviderError(f"bedrock rerank failed: {exc}") from exc
+        payload = json.loads(res["body"].read())
+        results = payload.get("results")
+        if not isinstance(results, list):
+            raise ProviderError("bedrock rerank returned unexpected payload")
+        return [
+            RerankedItem(index=int(r["index"]), score=float(r["relevance_score"])) for r in results
+        ]
+
+    async def rerank(
+        self, query: str, documents: Sequence[str], *, top_n: int
+    ) -> list[RerankedItem]:
+        if not documents:
+            return []
+        return await asyncio.to_thread(self._invoke, query, documents, min(top_n, len(documents)))
 
 
 class BedrockLLMProvider:

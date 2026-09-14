@@ -9,7 +9,7 @@ Work stops at the end of each phase for review. Do not auto-advance.
 | 1 | Corpus | **done** | curated AWS/K8s/Terraform docs, synthetic Acme KB, 50–100 incidents, manifest + hashes + versions |
 | 2 | Baseline RAG | **done** (stub-verified; real Bedrock run pending credentials + cost approval) | ingestion → chunking → embedding → OpenSearch → vector retrieval → LLM → citation |
 | 3 | Evaluation | **tooling done; baseline run pending Bedrock entitlement** | 300+ questions, baseline Recall@K/MRR/NDCG/faithfulness/citation/latency/cost recorded |
-| 4 | Retrieval engineering | pending | BM25 + hybrid fusion (RRF & weighted) + metadata filters + reranking, each benchmarked |
+| 4 | Retrieval engineering | **done** (benchmarks pending Bedrock) | BM25 + hybrid fusion (RRF & weighted) + metadata filters + reranking, each benchmarked |
 | 5 | Parent-child | pending | child retrieval → parent expansion → context assembly, benchmarked |
 | 6 | Generation | pending | query understanding, citation enforcement, abstention, conflict detection |
 | 7 | Security | pending | auth, roles, ACL filtering at search time, injection defense, adversarial tests |

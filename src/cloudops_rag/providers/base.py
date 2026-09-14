@@ -101,6 +101,10 @@ class SearchProvider(Protocol):
         self, embedding: Sequence[float], *, k: int, filters: SearchFilters
     ) -> list[SearchHit]: ...
 
+    async def bm25_search(self, query: str, *, k: int, filters: SearchFilters) -> list[SearchHit]:
+        """Lexical search over content/content.exact/title with the same filter clauses."""
+        ...
+
     async def get_parents(self, parent_ids: Sequence[str]) -> list[ParentChunk]: ...
 
     async def refresh(self) -> None:

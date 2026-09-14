@@ -92,3 +92,29 @@ async def test_converse_errors_become_provider_errors() -> None:
         p = BedrockLLMProvider(client=client)
         with pytest.raises(ProviderError, match="converse failed"):
             await p.generate("s", "u")
+
+
+async def test_cohere_rerank_request_and_response_shape() -> None:
+    from cloudops_rag.providers.bedrock import BedrockRerankerProvider
+
+    client = _client()
+    body = json.dumps(
+        {"results": [{"index": 2, "relevance_score": 0.91}, {"index": 0, "relevance_score": 0.2}]}
+    ).encode()
+    with Stubber(client) as stub:
+        stub.add_response(
+            "invoke_model",
+            {"body": StreamingBody(io.BytesIO(body), len(body)), "contentType": "application/json"},
+            {
+                "modelId": "cohere.rerank-v3-5:0",
+                "body": json.dumps(
+                    {"query": "q", "documents": ["a", "b", "c"], "top_n": 2, "api_version": 2}
+                ),
+                "accept": "application/json",
+                "contentType": "application/json",
+            },
+        )
+        p = BedrockRerankerProvider(client=client)
+        out = await p.rerank("q", ["a", "b", "c"], top_n=2)
+        assert [(r.index, r.score) for r in out] == [(2, 0.91), (0, 0.2)]
+        assert await p.rerank("q", [], top_n=2) == []

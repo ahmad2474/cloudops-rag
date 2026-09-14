@@ -9,7 +9,7 @@ from cloudops_rag.generation.prompts import ABSTAIN_TOKEN, SYSTEM_PROMPT, build_
 from cloudops_rag.logging import get_logger
 from cloudops_rag.observability.pricing import estimate_cost_usd
 from cloudops_rag.providers.base import LLMProvider, SearchFilters
-from cloudops_rag.retrieval.vector import VectorRetriever
+from cloudops_rag.retrieval.hybrid import HybridRetriever
 
 log = get_logger(__name__)
 
@@ -21,7 +21,7 @@ NO_EVIDENCE_ANSWER = (
 class AnswerService:
     def __init__(
         self,
-        retriever: VectorRetriever,
+        retriever: HybridRetriever,
         llm: LLMProvider,
         *,
         context_token_budget: int = 6000,

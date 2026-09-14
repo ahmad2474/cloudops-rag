@@ -24,7 +24,8 @@ from cloudops_rag.generation import AnswerService
 from cloudops_rag.ingestion.documents import Manifest
 from cloudops_rag.logging import configure_logging
 from cloudops_rag.providers.registry import build_providers
-from cloudops_rag.retrieval import VectorRetriever
+from cloudops_rag.retrieval import Strategy
+from cloudops_rag.retrieval.factory import make_retriever
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 REPORTS = REPO_ROOT / "evaluation" / "reports"
@@ -72,7 +73,13 @@ def compare(new: EvalReport, base: EvalReport) -> dict[str, float]:
 async def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--dataset", default=str(REPO_ROOT / "data" / "evaluation" / "dataset.json"))
-    p.add_argument("--strategy", default="vector", help="label recorded in the report")
+    p.add_argument(
+        "--strategy",
+        default=None,
+        choices=["vector", "bm25", "hybrid_rrf", "hybrid_weighted"],
+        help="retrieval strategy (default: RETRIEVAL_STRATEGY setting)",
+    )
+    p.add_argument("--rerank", action="store_true", help="enable reranking (RERANKER_PROVIDER)")
     p.add_argument("--generation", action="store_true")
     p.add_argument(
         "--judge", action="store_true", help="LLM-judge faithfulness (implies --generation)"
@@ -103,19 +110,24 @@ async def main() -> int:
         "llm": f"{settings.llm_provider}:{settings.llm_model}",
         "search": settings.search_provider,
     }
-    retriever = VectorRetriever(
-        providers.embedding, providers.search, candidates=args.candidates, top_k=args.top_k
+    strategy: Strategy | None = args.strategy
+    rerank = True if args.rerank else None
+    retriever = make_retriever(
+        providers,
+        settings,
+        strategy=strategy,
+        rerank=rerank,
+        candidates=args.candidates,
+        top_k=args.top_k,
+    )
+    label = retriever.label
+    provider_labels["reranker"] = (
+        f"{settings.reranker_provider}:{settings.reranker_model}" if retriever._reranker else "off"
     )
     answers = None
     if args.generation:
-        gen_retriever = VectorRetriever(
-            providers.embedding,
-            providers.search,
-            candidates=settings.retrieval_candidates,
-            top_k=settings.retrieval_top_k,
-        )
         answers = AnswerService(
-            gen_retriever,
+            make_retriever(providers, settings, strategy=strategy, rerank=rerank),
             providers.llm,
             context_token_budget=settings.context_token_budget,
             max_tokens=settings.llm_max_tokens,
@@ -127,7 +139,7 @@ async def main() -> int:
     try:
         runner = EvalRunner(
             retriever,
-            strategy=args.strategy,
+            strategy=label,
             providers=provider_labels,
             answers=answers,
             judge=judge,
@@ -139,7 +151,7 @@ async def main() -> int:
     print_report(report)
     REPORTS.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
-    out = Path(args.out) if args.out else REPORTS / f"{args.strategy}-{stamp}.json"
+    out = Path(args.out) if args.out else REPORTS / f"{label}-{stamp}.json"
     await asyncio.to_thread(
         out.write_text, json.dumps(report.model_dump(mode="json"), indent=2) + "\n"
     )

@@ -154,6 +154,30 @@ class StubSearchProvider:
         scored.sort(key=lambda h: (-h.score, h.chunk.chunk_id))
         return scored[:k]
 
+    async def bm25_search(self, query: str, *, k: int, filters: SearchFilters) -> list[SearchHit]:
+        """Term-overlap scoring with a rough IDF; exact tokens (iam:PassRole) count double."""
+        q_terms = [t for t in re.findall(r"[a-z0-9:_\-./]+", query.lower()) if len(t) > 1]
+        if not q_terms:
+            return []
+        docs = [c for c, _ in self._chunks.values() if _matches(c, filters)]
+        n = len(docs) or 1
+        tokenised = {
+            c.chunk_id: set(re.findall(r"[a-z0-9:_\-./]+", c.content.lower())) for c in docs
+        }
+        df = {t: sum(1 for toks in tokenised.values() if t in toks) for t in set(q_terms)}
+        scored: list[SearchHit] = []
+        for c in docs:
+            toks = tokenised[c.chunk_id]
+            s = 0.0
+            for t in q_terms:
+                if t in toks:
+                    idf = math.log(1 + n / (1 + df[t]))
+                    s += idf * (2.0 if any(ch in t for ch in ":_-./") else 1.0)
+            if s > 0:
+                scored.append(SearchHit(chunk=c, score=s))
+        scored.sort(key=lambda h: (-h.score, h.chunk.chunk_id))
+        return scored[:k]
+
     async def get_parents(self, parent_ids: Sequence[str]) -> list[ParentChunk]:
         return [self._parents[p] for p in parent_ids if p in self._parents]
 

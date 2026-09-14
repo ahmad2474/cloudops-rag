@@ -1,5 +1,29 @@
 # Retrieval & generation
 
+## Phase 4 — hybrid retrieval + reranking
+
+```
+question ─┬─▶ embed_query ─▶ kNN (k=50, filtered) ──┐
+          └─▶ BM25 multi_match (k=50, filtered) ──┤─▶ fusion (RRF k=60 | weighted min-max)
+                                                   ─▶ rerank top-20 (Cohere Rerank 3.5) ─▶ top-8
+                                                   ─▶ parent expansion ─▶ context ─▶ LLM
+```
+
+- `RETRIEVAL_STRATEGY` ∈ `vector | bm25 | hybrid_rrf | hybrid_weighted`; `RERANK_ENABLED`
+  toggles the Cohere stage. Both can be overridden per request (`strategy`, `rerank` fields on
+  `/ask` and `/search`) and per eval run (`--strategy`, `--rerank`).
+- **BM25** queries `content` (english analyzer), `content.exact` (whitespace analyzer, boost 1.5 —
+  keeps `iam:PassRole`, `aws-node`, `awscni_no_available_ip_addresses` as single tokens) and
+  `title`, with the identical ACL/metadata filter clauses as kNN.
+- **Fusion** (`retrieval/fusion.py`, unit-tested against hand-computed values): RRF
+  `Σ 1/(k+rank)`; weighted = convex combination of per-source min-max-normalised scores. Raw
+  cosine and BM25 scores are never averaged directly.
+- **Rerank**: fused top-20 child texts → Cohere Rerank 3.5 → top-8. Billed per query
+  ($2 / 1,000). Requires the IAM policy to allow `cohere.rerank-v3-5:0` (currently Amazon-only —
+  to be added when quotas are provisioned) and a one-time Marketplace enablement by an admin.
+- Trail stages: `embed_query, vector_search, bm25_search, fusion{method, overlap}, rerank{pool},
+  select_top_k, parent_expansion`.
+
 ## Phase 2 — baseline (vector only)
 
 ```

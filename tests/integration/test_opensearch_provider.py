@@ -79,3 +79,27 @@ async def test_metadata_filters_in_opensearch(provider: OpenSearchProvider) -> N
         q, k=20, filters=SearchFilters(roles=all_roles, version="1.31")
     )
     assert {h.chunk.document_id for h in v} == {"eks-pod-networking"}
+
+
+async def test_bm25_exact_terms_and_hybrid_in_opensearch(provider: OpenSearchProvider) -> None:
+    all_roles: list = ["developer", "platform-engineer", "security-admin"]
+    hits = await provider.bm25_search(
+        "max_connections", k=5, filters=SearchFilters(roles=all_roles)
+    )
+    assert hits and hits[0].chunk.document_id == "rds-connection-failure"
+    dev = await provider.bm25_search(
+        "acme-breakglass-1", k=5, filters=SearchFilters(roles=["developer"])
+    )
+    assert dev == []
+    from cloudops_rag.retrieval import HybridRetriever
+
+    r = HybridRetriever(
+        StubEmbeddingProvider(dimensions=256),
+        provider,
+        strategy="hybrid_rrf",
+        candidates=10,
+        top_k=3,
+    )
+    res = await r.retrieve("awscni_no_available_ip_addresses", SearchFilters(roles=all_roles))
+    assert res.parents and res.parents[0].document_id == "eks-pod-networking"
+    assert any(s.stage == "fusion" for s in res.trail)

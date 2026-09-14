@@ -19,7 +19,7 @@ from cloudops_rag.evaluation.report import EvalReport, ItemResult, MetricBlock
 from cloudops_rag.generation import AnswerService
 from cloudops_rag.logging import get_logger
 from cloudops_rag.providers.base import LLMProvider, SearchFilters
-from cloudops_rag.retrieval.vector import VectorRetriever
+from cloudops_rag.retrieval.hybrid import HybridRetriever
 
 log = get_logger(__name__)
 
@@ -27,7 +27,7 @@ log = get_logger(__name__)
 class EvalRunner:
     def __init__(
         self,
-        retriever: VectorRetriever,
+        retriever: HybridRetriever,
         *,
         strategy: str,
         providers: dict[str, str],
