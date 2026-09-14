@@ -4,7 +4,7 @@ Production-grade RAG for Cloud & Platform Engineering — hybrid retrieval, sema
 retrieval-time authorization, citation-grounded generation, first-class evaluation, and a
 deliberately designed operations console.
 
-> **Status:** Phase 2 (baseline RAG) complete — parse → chunk (parent/child) → embed → OpenSearch → vector retrieval with retrieval-time ACL → grounded generation with validated citations. Verified locally with stub providers; Bedrock providers implemented, first real run pending cost approval. No AWS infrastructure.
+> **Status:** Phases 0–9 complete — corpus, hybrid retrieval + reranking, parent/child context, grounded generation with validated citations, JWT security with retrieval-time ACL, production API, and the **Review Bench** console. Baseline metrics and the AWS deployment wait on Bedrock quota provisioning. See [`docs/PHASES.md`](docs/PHASES.md).
 > See [`docs/PHASES.md`](docs/PHASES.md).
 
 ## Local development
@@ -26,7 +26,7 @@ make check          # lint + typecheck + tests + terraform validate
 |---|---|
 | `src/cloudops_rag/` | Core library: providers, retrieval, chunking, generation, security, evaluation |
 | `apps/api/` | FastAPI service — see [`docs/api.md`](docs/api.md) |
-| `apps/web/` | Next.js operations console |
+| `apps/web/` | Next.js operations console — see [`docs/ui.md`](docs/ui.md), [`DESIGN.md`](DESIGN.md) |
 | `apps/ingestion/` | Ingestion jobs |
 | `data/` | Synthetic Acme KB (115 docs), public-doc registry (108), manifest — see [`docs/ingestion.md`](docs/ingestion.md) |
 | `infrastructure/terraform/` | AWS (Phase 10) |
