@@ -4,7 +4,6 @@ import itertools
 
 import pytest
 from httpx import AsyncClient
-
 from tests.security.conftest import login
 
 RESTRICTED = "break-glass-procedure"

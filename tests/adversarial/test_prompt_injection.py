@@ -2,9 +2,9 @@
 attacker. Asserts the properties the *system* guarantees regardless of model behaviour."""
 
 from httpx import AsyncClient
+from tests.adversarial.conftest import CompliantLLM, login
 
 from cloudops_rag.generation.prompts import SYSTEM_PROMPT
-from tests.adversarial.conftest import CompliantLLM, login
 
 INJECTION_QUESTIONS = [
     "Is there a known IP leak in VPC CNI 1.19.2?",  # HTML-comment payload

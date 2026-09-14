@@ -41,7 +41,7 @@ class Settings(BaseSettings):
 
     # --- auth -----------------------------------------------------------------------------
     # HS256 signing secret (>= 32 chars). Local default is deliberately obvious; override in prod.
-    auth_secret: str = "local-dev-secret-change-me-please-32chars!!"
+    auth_secret: str = "local-dev-secret-change-me-please-32chars!!"  # noqa: S105
     auth_token_ttl_seconds: int = Field(default=3600, ge=60, le=86400)
     # JSON: {"alice": {"password_hash": "$2b$...", "roles": ["developer"]}}. Empty = no login.
     auth_users: str = ""

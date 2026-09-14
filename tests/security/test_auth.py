@@ -3,11 +3,11 @@ import time
 import jwt
 import pytest
 from httpx import AsyncClient
+from tests.security.conftest import SECRET, login
 
 from cloudops_rag.config import Settings
 from cloudops_rag.security import AuthError, TokenService, UserStore, hash_password
 from cloudops_rag.security.auth import Principal
-from tests.security.conftest import SECRET, login
 
 RESTRICTED_Q = {"question": "What are the break-glass user names and envelope holders?"}
 
