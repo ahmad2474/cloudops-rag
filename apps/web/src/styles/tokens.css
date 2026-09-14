@@ -1,0 +1,37 @@
+/*
+ * Design tokens — the single source of colour/spacing/type for the console.
+ * Dark-first graphite. Components consume these via Tailwind utilities; never hard-code colours.
+ * Phase 0: foundation only. The full scale is designed in Phase 9.
+ */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces: graphite ramp, never pure black */
+  --surface-0: #0e1013;
+  --surface-1: #14171c;
+  --surface-2: #1a1e25;
+  --surface-3: #21262f;
+
+  /* Borders: soft, low-contrast */
+  --border-subtle: #262b34;
+  --border-strong: #343a45;
+
+  /* Text */
+  --text-primary: #e6e9ee;
+  --text-secondary: #9aa3b0;
+  --text-muted: #626b78;
+
+  /* One restrained accent (cyan-teal), plus semantic states */
+  --accent: #4fd1c5;
+  --accent-muted: #2a6f68;
+  --ok: #5fcf80;
+  --warn: #e3b341;
+  --danger: #f0605d;
+
+  /* Technical grid texture */
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --grid-size: 24px;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+}
