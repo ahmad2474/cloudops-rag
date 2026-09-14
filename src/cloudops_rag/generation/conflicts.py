@@ -47,7 +47,7 @@ def _newer(a: ContextSource, b: ContextSource) -> ContextSource:
     return a if a.parent.updated_at >= b.parent.updated_at else b
 
 
-def detect_conflicts(sources: list[ContextSource], *, stale_days: int = 365) -> list[Conflict]:
+def detect_conflicts(sources: list[ContextSource], *, stale_days: int = 240) -> list[Conflict]:
     out: list[Conflict] = []
     seen: set[tuple[str, str]] = set()
     for i, a in enumerate(sources):

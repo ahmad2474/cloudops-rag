@@ -24,6 +24,9 @@ install: ## Install Python deps (uv) and pre-commit hooks
 	uv sync
 	uv run pre-commit install
 
+auth-demo: ## Append demo users (dev/pe/sec, password acme-demo) to .env
+	uv run python apps/api/scripts/demo_users.py acme-demo >> .env
+
 api: ## Run FastAPI with reload
 	uv run uvicorn app.main:app --app-dir apps/api --reload --port 8000
 
@@ -104,6 +107,6 @@ docker-lint: ## hadolint Dockerfiles
 check: lint typecheck test corpus-check web-lint tf-check ## Everything CI runs (minus Playwright)
 
 .PHONY: help up down nuke logs install api test test-integration lint fmt typecheck \
-        corpus-fetch corpus-manifest corpus-check index-plan index index-full ask \
+        auth-demo corpus-fetch corpus-manifest corpus-check index-plan index index-full ask \
         eval-dataset eval eval-full \
         web-install web-dev web-build web-lint web-test tf-check docker-lint check

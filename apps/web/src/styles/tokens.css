@@ -1,18 +1,18 @@
 /*
- * Design tokens — the single source of colour/spacing/type for the console.
- * Dark-first graphite. Components consume these via Tailwind utilities; never hard-code colours.
- * Phase 0: foundation only. The full scale is designed in Phase 9.
+ * Design tokens — Review Bench world. Single source of colour/space/type for the console.
+ * Graphite panes, hairline gutters, one accent used as a luminance ramp for every score.
+ * Components consume these via Tailwind utilities (see globals.css @theme); never hard-code.
  */
 :root {
   color-scheme: dark;
 
   /* Surfaces: graphite ramp, never pure black */
-  --surface-0: #0e1013;
-  --surface-1: #14171c;
-  --surface-2: #1a1e25;
-  --surface-3: #21262f;
+  --surface-0: #0e1013; /* page */
+  --surface-1: #14171c; /* pane */
+  --surface-2: #1a1e25; /* raised row / header */
+  --surface-3: #21262f; /* hover / selected row */
 
-  /* Borders: soft, low-contrast */
+  /* Hairlines */
   --border-subtle: #262b34;
   --border-strong: #343a45;
 
@@ -20,13 +20,32 @@
   --text-primary: #e6e9ee;
   --text-secondary: #9aa3b0;
   --text-muted: #626b78;
+  --text-faint: #444b56;
 
-  /* One restrained accent (cyan-teal), plus semantic states */
+  /* The one accent, as a ramp (scores, evidence, selection) */
   --accent: #4fd1c5;
-  --accent-muted: #2a6f68;
-  --ok: #5fcf80;
-  --warn: #e3b341;
-  --danger: #f0605d;
+  --accent-90: #45bdb2;
+  --accent-70: #3a9a91;
+  --accent-50: #2f736c;
+  --accent-30: #244e4a;
+  --accent-15: #1b3230;
+  --accent-ink: #0a1f1d;
+
+  /* Semantic states (review vocabulary) */
+  --ok: #5fcf80;      /* checks passed */
+  --warn: #e3b341;    /* conflict / delayed / stale */
+  --danger: #f0605d;  /* withheld / blocked / cancelled */
+  --info: #7aa2f7;    /* reserved: links in evidence */
+
+  /* Source tints: fixed palette so S1..S8 keep identity across the bench */
+  --tint-1: #4fd1c5;
+  --tint-2: #c792ea;
+  --tint-3: #89ddff;
+  --tint-4: #f78c6c;
+  --tint-5: #d4bfff;
+  --tint-6: #a3e4d7;
+  --tint-7: #f5c2e7;
+  --tint-8: #b8d8ff;
 
   /* Technical grid texture */
   --grid-line: rgba(255, 255, 255, 0.035);
@@ -34,4 +53,9 @@
 
   --radius-sm: 4px;
   --radius-md: 6px;
+
+  /* Bench geometry */
+  --bar-h: 48px;
+  --gutter: 1px;
+  --line-h: 1.55;
 }

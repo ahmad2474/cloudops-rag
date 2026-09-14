@@ -14,6 +14,6 @@ Work stops at the end of each phase for review. Do not auto-advance.
 | 6 | Generation | **done** | query understanding, citation enforcement, abstention, conflict detection |
 | 7 | Security | **done** | auth, roles, ACL filtering at search time, injection defense, adversarial tests |
 | 8 | Production API | **done** | request IDs, structured logs, timeouts, retries, rate limiting, streaming, health |
-| 9 | UI | **next** | Search/Answer, Sources, Incidents, Explorer, Evaluation, System status |
-| 10 | AWS (Terraform) | pending | S3, OpenSearch t3.small, EC2, IAM, CloudWatch, Bedrock perms — plan → cost → approve → apply |
+| 9 | UI | **done** — Review Bench console; Impeccable finish review: ship | Search/Answer, Sources, Incidents, Explorer, Evaluation, System status |
+| 10 | AWS (Terraform) | **next** (blocked on Bedrock quotas for a meaningful demo) | S3, OpenSearch t3.small, EC2, IAM, CloudWatch, Bedrock perms — plan → cost → approve → apply |
 | 11 | AWS demo | pending | ingest, benchmark, security + load tests, metrics, demo video, **destroy** |
