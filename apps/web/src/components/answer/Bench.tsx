@@ -89,37 +89,40 @@ export function Bench({ settings, registerQueryField }: { settings: BenchSetting
     [settings],
   );
 
-  // Query field lives in the command bar; we hand it up as a node.
+  const queryForm = (
+    <form
+      className="flex items-center gap-2 border-t border-border-subtle bg-surface-1 px-3 py-2"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void ask(question);
+      }}
+    >
+      <span className="font-mono text-[11px] text-text-faint" aria-hidden="true">›</span>
+      <input
+        ref={input}
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        placeholder="Ask the platform — e.g. why are my EKS pods stuck in Pending?"
+        aria-label="Question"
+        autoFocus
+        className="h-8 w-full bg-transparent font-mono text-[13px] text-text-primary placeholder:text-text-faint focus:shadow-[inset_0_-1px_0_var(--accent)] focus:outline-none"
+      />
+      {phase === "retrieving" || phase === "synthesizing" ? (
+        <button type="button" onClick={() => abort.current?.abort()} className="h-6 shrink-0 rounded-sm border border-border-strong px-2 font-mono text-[11px] text-text-secondary hover:text-text-primary">
+          stop
+        </button>
+      ) : (
+        <button type="submit" className="h-6 shrink-0 rounded-sm border border-accent-50 bg-accent-15 px-2 font-mono text-[11px] whitespace-nowrap text-accent hover:bg-accent-30">
+          ask
+        </button>
+      )}
+    </form>
+  );
+
+  // The command bar's query slot stays empty on the bench; the field lives in the pane.
   useEffect(() => {
-    registerQueryField(
-      <form
-        className="flex w-full items-center gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void ask(question);
-        }}
-      >
-        <input
-          ref={input}
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Ask the platform — e.g. why are my EKS pods stuck in Pending?"
-          aria-label="Question"
-          autoFocus
-          className="h-8 w-full bg-transparent font-mono text-[13px] text-text-primary placeholder:text-text-faint focus:shadow-[inset_0_-1px_0_var(--accent)] focus:outline-none"
-        />
-        {phase === "retrieving" || phase === "synthesizing" ? (
-          <button type="button" onClick={() => abort.current?.abort()} className="h-6 rounded-sm border border-border-strong px-2 font-mono text-[11px] text-text-secondary hover:text-text-primary">
-            stop
-          </button>
-        ) : (
-          <button type="submit" className="h-6 shrink-0 rounded-sm border border-accent-50 bg-accent-15 px-2 font-mono text-[11px] whitespace-nowrap text-accent hover:bg-accent-30">
-            ask
-          </button>
-        )}
-      </form>,
-    );
-  }, [question, phase, ask, registerQueryField]);
+    registerQueryField(null);
+  }, [registerQueryField]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -213,6 +216,7 @@ export function Bench({ settings, registerQueryField }: { settings: BenchSetting
             )}
           </div>
           <ChecksStrip trail={trail} response={response} phase={phase} />
+          {queryForm}
         </section>
         {/* RIGHT: the evidence file */}
         <section className="flex min-h-0 min-w-0 flex-col bg-surface-0" aria-label="Evidence">

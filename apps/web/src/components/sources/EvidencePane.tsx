@@ -63,6 +63,10 @@ export function EvidencePane({
     return new Set(matchLines(claimText, file.lines.slice(s, e)).map((i) => i + s));
   }, [src, claimText, file]);
 
+  const [expanded, setExpanded] = useState<Set<"above" | "below">>(new Set());
+  useEffect(() => {
+    queueMicrotask(() => setExpanded(new Set()));
+  }, [src?.sid]);
   const scroller = useRef<HTMLDivElement>(null);
   const anchor = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -89,6 +93,11 @@ export function EvidencePane({
   };
   const [hs, he] = file.hunk;
   const anchorLine = hits.size ? Math.min(...hits) : hs;
+  const CONTEXT = 6;
+  const visibleFrom = expanded.has("above") ? 0 : Math.max(0, hs - CONTEXT);
+  const visibleTo = expanded.has("below") ? file.lines.length : Math.min(file.lines.length, he + CONTEXT);
+  const foldAbove = visibleFrom;
+  const foldBelow = file.lines.length - visibleTo;
   return (
     <div className="flex h-full min-h-0 flex-col" style={{ ["--tint" as string]: tint }}>
       <header className="border-b border-border-subtle px-3 py-2" style={{ background: `color-mix(in srgb, ${tint} 9%, var(--surface-1))` }}>
@@ -117,7 +126,14 @@ export function EvidencePane({
         </div>
       </header>
       <div ref={scroller} className="pane relative max-h-[60vh] min-h-0 flex-1 overflow-auto font-mono text-[12px] leading-[1.6] lg:max-h-none" role="region" aria-label={`Evidence from ${src.title}`}>
-        {file.lines.map((line, i) => {
+        {foldAbove > 0 && (
+          <button type="button" onClick={() => setExpanded((e) => new Set([...e, "above"]))} className="grid w-full grid-cols-[44px_1fr] text-left text-text-muted hover:bg-surface-2">
+            <span className="border-r border-border-subtle pr-2 text-right text-text-faint">⋯</span>
+            <span className="px-3">{foldAbove} line{foldAbove > 1 ? "s" : ""} above the cited section · expand</span>
+          </button>
+        )}
+        {file.lines.slice(visibleFrom, visibleTo).map((line, k) => {
+          const i = visibleFrom + k;
           const hit = hits.has(i);
           const inHunk = i >= hs && i < he;
           return (
@@ -133,10 +149,18 @@ export function EvidencePane({
             </div>
           );
         })}
+        {foldBelow > 0 && (
+          <button type="button" onClick={() => setExpanded((e) => new Set([...e, "below"]))} className="grid w-full grid-cols-[44px_1fr] text-left text-text-muted hover:bg-surface-2">
+            <span className="border-r border-border-subtle pr-2 text-right text-text-faint">⋯</span>
+            <span className="px-3">{foldBelow} line{foldBelow > 1 ? "s" : ""} below the cited section · expand</span>
+          </button>
+        )}
       </div>
-      <footer className="border-t border-border-subtle px-3 py-1 font-mono text-[10.5px] text-text-muted">
-        {file.whole ? "whole document shown; " : "section only (document unavailable); "}
-        {hits.size > 0 ? `${hits.size} matched line${hits.size > 1 ? "s" : ""} for the selected claim (lexical match)` : claimText ? "no strong lexical match for the selected claim — read the hunk" : "select a claim to match lines"}
+      <footer className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border-subtle px-3 py-1 font-mono text-[10.5px] text-text-muted">
+        <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5" style={{ background: `color-mix(in srgb, ${tint} 16%, var(--surface-1))`, boxShadow: `inset 2px 0 0 ${tint}` }} /> matches the selected claim</span>
+        <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5" style={{ background: `color-mix(in srgb, ${tint} 5%, var(--surface-1))` }} /> cited section</span>
+        <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 bg-surface-1" /> rest of the document (context)</span>
+        <span className="ml-auto">{hits.size > 0 ? `${hits.size} matched line${hits.size > 1 ? "s" : ""} (lexical)` : claimText ? "no strong lexical match — read the section" : "select a claim"}</span>
       </footer>
     </div>
   );

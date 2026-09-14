@@ -57,5 +57,10 @@ exact excerpt lines in the evidence pane and tints its header; keyboard j/k move
 line highlight fades in 120ms, trail packet deploys 200ms; no motion on hover except tint; all
 motion off under prefers-reduced-motion.
 
+USER-PINNED CHANGES (2026-09-15, after finish review): the query field lives at the bottom of the
+answer pane (a compose box below CHECKS), not in the command bar; the evidence file opens on the
+cited hunk with ±6 lines of context and folds the rest behind "⋯ N lines · expand", with a legend
+(matches the claim / cited section / rest of document).
+
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the
 verdict, DESIGN.md, and every shipping raster carrying its provenance.

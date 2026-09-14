@@ -10,7 +10,7 @@ brief and direction contract in `.impeccable/surfaces/`.
 | Route | What it is |
 |---|---|
 | `/login` | Role switcher (three demo principals as a column-locked table) + credentials form; real JWT underneath |
-| `/` | **Bench**: command bar (tabs · query · strategy/rerank chips · role); left pane = answer as numbered claim lines with `[S#]` gutter markers and conflicts pinned as review comments; right pane = the **evidence file** — the whole cited document, line-numbered, cited section as the hunk, lexically matched lines lit; CHECKS strip (stages → counts · cited n/m · evidence ramp · conflicts); source plates at one fixed scale; trail packet → sheet with the query plan and usage |
+| `/` | **Bench**: command bar (tabs · strategy/rerank chips · role); left pane = the question field (bottom, compose-box style) and the answer as numbered claim lines with `[S#]` gutter markers and conflicts pinned as review comments; right pane = the **evidence file** — the cited section as a hunk with ±6 lines of context, the rest of the document folded behind expanders, lexically matched lines lit, legend in the footer; CHECKS strip (stages → counts · cited n/m · evidence ramp · conflicts); source plates at one fixed scale; trail packet → sheet with the query plan and usage |
 | `/incidents`, `/incidents/[id]` | column-locked incident table with severity filter; detail with services, root-cause category, related / same-cause / shared-service incidents |
 | `/explorer` | corpus as a type/tag map for your role; document list; line-numbered document view with supersedes/related links |
 | `/evaluation` | strategy comparison table from `evaluation/reports/*.json` with per-category breakdown; honest empty state until real runs exist |
