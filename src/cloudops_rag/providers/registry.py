@@ -40,7 +40,12 @@ def build_providers(settings: Settings, *, use_stub_search: bool = False) -> Pro
     search: SearchProvider = (
         StubSearchProvider()
         if use_stub_search
-        else OpenSearchProvider(settings.opensearch_url, settings.opensearch_index_prefix)
+        else OpenSearchProvider(
+            settings.opensearch_url,
+            settings.opensearch_index_prefix,
+            auth=settings.opensearch_auth,
+            region=settings.aws_region,
+        )
     )
     return Providers(
         embedding=_build_embedding(settings),

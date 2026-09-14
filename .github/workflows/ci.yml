@@ -80,7 +80,7 @@ jobs:
       - run: pnpm test
 
   infra:
-    name: Infra — terraform / tflint / checkov / hadolint
+    name: Infra — terraform / tflint / trivy / hadolint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -99,14 +99,20 @@ jobs:
         run: |
           tflint --init
           tflint --recursive
-      - uses: bridgecrewio/checkov-action@v12
+      - name: trivy config (HIGH/CRITICAL; accepted findings in infrastructure/terraform/.trivyignore)
+        uses: aquasecurity/trivy-action@0.28.0
         with:
-          directory: infrastructure/terraform
-          framework: terraform
-          soft_fail: false
+          scan-type: config
+          scan-ref: infrastructure/terraform
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          trivyignores: infrastructure/terraform/.trivyignore
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: docker/api.Dockerfile
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: docker/web.Dockerfile
 
   security:
     name: Security tests

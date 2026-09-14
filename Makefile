@@ -97,8 +97,35 @@ web-test: ## Playwright smoke tests
 	cd $(WEB) && pnpm test
 
 # ---------------------------------------------------------------- infra
-tf-check: ## terraform fmt/validate + tflint (no AWS calls)
+tf-check: ## terraform fmt/validate + tflint + trivy (no AWS calls)
 	cd infrastructure/terraform && terraform fmt -check -recursive && terraform init -backend=false -input=false >/dev/null && terraform validate
+	cd infrastructure/terraform && tflint --init >/dev/null && tflint --recursive
+	cd infrastructure/terraform && trivy config --quiet --severity HIGH,CRITICAL --exit-code 1 .
+
+TF_DIR = infrastructure/terraform
+TF_VARS = environments/demo.tfvars
+
+aws-push: ## Build linux/amd64 images and push to ECR; prints image_tag for demo.tfvars
+	scripts/aws-push.sh
+
+aws-cost: ## Month-to-date spend by service (Cost Explorer)
+	scripts/aws-cost-check.sh
+
+tf-init: ## terraform init (local state; the demo is single-operator and short-lived)
+	cd $(TF_DIR) && terraform init -input=false
+
+tf-plan: ## terraform plan for the demo env → review with docs/aws.md cost table before apply
+	cd $(TF_DIR) && terraform plan -input=false -var-file=$(TF_VARS) -out=demo.tfplan
+
+tf-apply: ## Apply the reviewed plan (requires an explicit `yes`)
+	@read -p "Apply demo.tfplan? Cost envelope in docs/aws.md. Type yes: " a && [ "$$a" = "yes" ]
+	cd $(TF_DIR) && terraform apply -input=false demo.tfplan
+
+tf-destroy: ## Destroy the demo environment — run this the same day the demo ends
+	cd $(TF_DIR) && terraform destroy -var-file=$(TF_VARS)
+
+tf-output: ## Console URL, instance id, endpoints
+	cd $(TF_DIR) && terraform output
 
 docker-lint: ## hadolint Dockerfiles
 	hadolint docker/*.Dockerfile
@@ -109,4 +136,4 @@ check: lint typecheck test corpus-check web-lint tf-check ## Everything CI runs 
 .PHONY: help up down nuke logs install api test test-integration lint fmt typecheck \
         auth-demo corpus-fetch corpus-manifest corpus-check index-plan index index-full ask \
         eval-dataset eval eval-full \
-        web-install web-dev web-build web-lint web-test tf-check docker-lint check
+        web-install web-dev web-build web-lint web-test tf-check tf-init tf-plan tf-apply tf-destroy tf-output aws-push aws-cost docker-lint check

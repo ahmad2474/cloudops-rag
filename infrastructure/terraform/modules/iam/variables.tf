@@ -1,0 +1,9 @@
+variable "name" { type = string }
+variable "region" { type = string }
+variable "account_id" { type = string }
+variable "bucket_arn" { type = string }
+variable "ecr_repo_arns" { type = list(string) }
+variable "log_group_arn" { type = string }
+variable "parameter_path" { type = string }
+variable "llm_model" { type = string }
+variable "rerank_model" { type = string }

@@ -4,7 +4,7 @@ Production-grade RAG for Cloud & Platform Engineering — hybrid retrieval, sema
 retrieval-time authorization, citation-grounded generation, first-class evaluation, and a
 deliberately designed operations console.
 
-> **Status:** Phases 0–9 complete — corpus, hybrid retrieval + reranking, parent/child context, grounded generation with validated citations, JWT security with retrieval-time ACL, production API, and the **Review Bench** console. Baseline metrics and the AWS deployment wait on Bedrock quota provisioning. See [`docs/PHASES.md`](docs/PHASES.md).
+> **Status:** Phases 0–9 complete — corpus, hybrid retrieval + reranking, parent/child context, grounded generation with validated citations, JWT security with retrieval-time ACL, production API, and the **Review Bench** console. Phase 10 Terraform is authored and validated (`make tf-check`); baseline metrics and the AWS demo wait on Bedrock quota provisioning. See [`docs/PHASES.md`](docs/PHASES.md).
 > See [`docs/PHASES.md`](docs/PHASES.md).
 
 ## Local development
@@ -29,7 +29,7 @@ make check          # lint + typecheck + tests + terraform validate
 | `apps/web/` | Next.js operations console — see [`docs/ui.md`](docs/ui.md), [`DESIGN.md`](DESIGN.md) |
 | `apps/ingestion/` | Ingestion jobs |
 | `data/` | Synthetic Acme KB (115 docs), public-doc registry (108), manifest — see [`docs/ingestion.md`](docs/ingestion.md) |
-| `infrastructure/terraform/` | AWS (Phase 10) |
+| `infrastructure/terraform/` | AWS demo environment (7 modules, no NAT) — see [`docs/aws.md`](docs/aws.md) |
 | `tests/` | unit / integration / retrieval / security / adversarial |
 
 ## Results

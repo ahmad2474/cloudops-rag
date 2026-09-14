@@ -15,5 +15,5 @@ Work stops at the end of each phase for review. Do not auto-advance.
 | 7 | Security | **done** | auth, roles, ACL filtering at search time, injection defense, adversarial tests |
 | 8 | Production API | **done** | request IDs, structured logs, timeouts, retries, rate limiting, streaming, health |
 | 9 | UI | **done** — Review Bench console; Impeccable finish review: ship | Search/Answer, Sources, Incidents, Explorer, Evaluation, System status |
-| 10 | AWS (Terraform) | **next** (blocked on Bedrock quotas for a meaningful demo) | S3, OpenSearch t3.small, EC2, IAM, CloudWatch, Bedrock perms — plan → cost → approve → apply |
-| 11 | AWS demo | pending | ingest, benchmark, security + load tests, metrics, demo video, **destroy** |
+| 10 | AWS (Terraform) | **authored + validated** (fmt/validate/tflint/trivy green; `plan`/`apply` wait for Bedrock quotas + approval) | S3, OpenSearch t3.small, EC2, IAM, CloudWatch, Bedrock perms — plan → cost → approve → apply |
+| 11 | AWS demo | **next** (needs Bedrock quotas) | ingest, benchmark, security + load tests, metrics, demo video, **destroy** |

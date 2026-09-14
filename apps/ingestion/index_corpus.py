@@ -72,7 +72,12 @@ async def main() -> int:
 
 
 async def _stats(settings) -> dict:  # type: ignore[no-untyped-def,type-arg]
-    s = OpenSearchProvider(settings.opensearch_url, settings.opensearch_index_prefix)
+    s = OpenSearchProvider(
+        settings.opensearch_url,
+        settings.opensearch_index_prefix,
+        auth=settings.opensearch_auth,
+        region=settings.aws_region,
+    )
     try:
         return await s.stats()
     finally:

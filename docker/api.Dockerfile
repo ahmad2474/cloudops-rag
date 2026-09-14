@@ -1,12 +1,16 @@
-# Production image for the FastAPI service. Built in CI; deployed to EC2 in Phase 10.
+# Production image for the FastAPI service plus the ingestion/evaluation CLIs and the corpus,
+# so `make index-full` / `make eval` run on the demo instance against the managed domain.
 FROM ghcr.io/astral-sh/uv:0.4.29-python3.12-bookworm-slim AS builder
 WORKDIR /app
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-install-project
 COPY src ./src
 COPY apps/api ./apps/api
+COPY apps/ingestion ./apps/ingestion
+COPY apps/evaluation ./apps/evaluation
+COPY data ./data
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 

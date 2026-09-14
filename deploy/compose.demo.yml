@@ -1,0 +1,30 @@
+# Runs on the demo EC2 instance (written there by Terraform user-data, see
+# infrastructure/terraform/modules/compute/user_data.sh). Images come from ECR.
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    ports: ["80:80"]
+    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro"]
+    depends_on: [api, web]
+    restart: unless-stopped
+    logging: &logs
+      driver: awslogs
+      options:
+        awslogs-region: ${AWS_REGION}
+        awslogs-group: ${LOG_GROUP}
+        awslogs-stream: caddy
+  api:
+    image: ${API_IMAGE}
+    env_file: .env
+    expose: ["8000"]
+    restart: unless-stopped
+    logging:
+      <<: *logs
+      options: { awslogs-region: "${AWS_REGION}", awslogs-group: "${LOG_GROUP}", awslogs-stream: api }
+  web:
+    image: ${WEB_IMAGE}
+    expose: ["3000"]
+    restart: unless-stopped
+    logging:
+      <<: *logs
+      options: { awslogs-region: "${AWS_REGION}", awslogs-group: "${LOG_GROUP}", awslogs-stream: web }

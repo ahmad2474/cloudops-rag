@@ -1,0 +1,9 @@
+# Accepted findings for the temporary demo environment (docs/aws.md "Security posture").
+# AWS-0104 unrestricted egress: no NAT, the instance must reach ECR/Bedrock/SSM/S3 directly.
+AWS-0104
+# AWS-0164 public IP on the subnet: same reason; ingress is one port from one /32.
+AWS-0164
+# AWS-0132 / AWS-0095 customer-managed KMS keys for S3 / SNS: $1/key/month for a bucket of
+# public docs and an alarm topic; SSE-S3 is used instead.
+AWS-0132
+AWS-0095

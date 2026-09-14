@@ -1,0 +1,13 @@
+# Single origin for the demo: console at /, API at /api (prefix stripped). Plain HTTP on the
+# instance's public IP — the environment is temporary and IP-restricted (see docs/aws.md).
+:80 {
+	encode gzip
+	handle_path /api/* {
+		reverse_proxy api:8000 {
+			flush_interval -1
+		}
+	}
+	handle {
+		reverse_proxy web:3000
+	}
+}

@@ -57,6 +57,9 @@ class Settings(BaseSettings):
     search_provider: SearchProviderName = "opensearch"
     opensearch_url: str = "http://localhost:9200"
     opensearch_index_prefix: str = "cloudops"
+    # "none" for the local Docker node; "sigv4" signs requests with the AWS credential chain
+    # (instance role on EC2) for a managed domain with an IAM access policy.
+    opensearch_auth: Literal["none", "sigv4"] = "none"
 
     # --- retrieval / generation knobs (baseline; tuned in later phases) --------------------
     retrieval_strategy: RetrievalStrategy = "vector"

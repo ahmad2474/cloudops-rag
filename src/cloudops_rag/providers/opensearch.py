@@ -3,13 +3,32 @@
 from collections.abc import Sequence
 from typing import Any
 
-from opensearchpy import AsyncOpenSearch, NotFoundError
+from opensearchpy import AsyncHttpConnection, AsyncOpenSearch, AWSV4SignerAsyncAuth, NotFoundError
 from opensearchpy.helpers import async_bulk
 
 from cloudops_rag.chunking.models import Chunk, ParentChunk
 from cloudops_rag.providers.base import SearchFilters, SearchHit
 
 _KEYWORD = {"type": "keyword"}
+
+
+def make_client(url: str, *, auth: str = "none", region: str = "us-east-1") -> AsyncOpenSearch:
+    """Build the async client; SigV4 uses the standard AWS credential chain (instance role)."""
+    use_ssl = url.startswith("https")
+    if auth == "sigv4":
+        import boto3  # provider-local; application code never touches boto3
+
+        credentials = boto3.Session().get_credentials()
+        if credentials is None:
+            raise RuntimeError("OPENSEARCH_AUTH=sigv4 but no AWS credentials were found")
+        return AsyncOpenSearch(
+            hosts=[url],
+            use_ssl=use_ssl,
+            verify_certs=use_ssl,
+            http_auth=AWSV4SignerAsyncAuth(credentials, region, "es"),
+            connection_class=AsyncHttpConnection,
+        )
+    return AsyncOpenSearch(hosts=[url], use_ssl=use_ssl)
 
 
 def chunk_mapping(dimensions: int) -> dict[str, Any]:
@@ -113,8 +132,10 @@ def build_filter(filters: SearchFilters) -> list[dict[str, Any]]:
 
 
 class OpenSearchProvider:
-    def __init__(self, url: str, index_prefix: str) -> None:
-        self._client = AsyncOpenSearch(hosts=[url], use_ssl=url.startswith("https"))
+    def __init__(
+        self, url: str, index_prefix: str, *, auth: str = "none", region: str = "us-east-1"
+    ) -> None:
+        self._client = make_client(url, auth=auth, region=region)
         self._index_prefix = index_prefix
 
     @property
