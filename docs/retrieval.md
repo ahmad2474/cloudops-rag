@@ -29,7 +29,7 @@ question ─┬─▶ embed_query ─▶ kNN (k=50, filtered) ──┐
 ```
 question ─▶ plan_query (rules; optional LLM decomposition) ─▶ retrieve[_many] ─▶ context
          ─▶ detect_conflicts (metadata) ─▶ prompt (+version hint, +source notes) ─▶ LLM
-         ─▶ validate citations ─▶ evidence_strength ─▶ AnswerResponse
+         ─▶ output guard (blocked) ─▶ validate citations ─▶ evidence_strength ─▶ AnswerResponse
 ```
 
 - **Query plan** (`generation/query.py`): strips "ignore your instructions…" preambles from the

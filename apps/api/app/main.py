@@ -4,13 +4,16 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api.ask import router as ask_router
+from app.api.auth import router as auth_router
 from app.api.health import router as health_router
 from app.dependencies import AppState
 from app.middleware import RequestContextMiddleware
 from cloudops_rag import __version__
 from cloudops_rag.config import Settings, load_settings
+from cloudops_rag.errors import ConfigurationError
 from cloudops_rag.logging import configure_logging, get_logger
 from cloudops_rag.providers.registry import build_providers
+from cloudops_rag.security import TokenService, UserStore
 
 log = get_logger(__name__)
 
@@ -21,8 +24,16 @@ def create_app(settings: Settings | None = None, *, use_stub_search: bool = Fals
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        problems = settings.validate_for_environment()
+        if problems:
+            raise ConfigurationError("; ".join(problems))
         providers = build_providers(settings, use_stub_search=use_stub_search)
-        app.state.ctx = AppState(settings=settings, providers=providers)
+        app.state.ctx = AppState(
+            settings=settings,
+            providers=providers,
+            users=UserStore.from_json(settings.auth_users),
+            tokens=TokenService(settings.auth_secret, ttl_seconds=settings.auth_token_ttl_seconds),
+        )
         log.info(
             "startup",
             app_env=settings.app_env,
@@ -31,6 +42,8 @@ def create_app(settings: Settings | None = None, *, use_stub_search: bool = Fals
             search=settings.search_provider,
             retrieval=settings.retrieval_strategy,
             rerank=settings.rerank_enabled,
+            auth_users=len(app.state.ctx.users),
+            dev_role_header=settings.role_header_enabled,
             allow_aws_calls=settings.allow_aws_calls,
         )
         try:
@@ -47,6 +60,7 @@ def create_app(settings: Settings | None = None, *, use_stub_search: bool = Fals
     )
     app.add_middleware(RequestContextMiddleware)
     app.include_router(health_router)
+    app.include_router(auth_router)
     app.include_router(ask_router)
     return app
 

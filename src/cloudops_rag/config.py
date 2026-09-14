@@ -28,6 +28,15 @@ class Settings(BaseSettings):
     reranker_provider: ProviderName = "stub"
     reranker_model: str = "cohere.rerank-v3-5:0"
 
+    # --- auth -----------------------------------------------------------------------------
+    # HS256 signing secret (>= 32 chars). Local default is deliberately obvious; override in prod.
+    auth_secret: str = "local-dev-secret-change-me-please-32chars!!"
+    auth_token_ttl_seconds: int = Field(default=3600, ge=60, le=86400)
+    # JSON: {"alice": {"password_hash": "$2b$...", "roles": ["developer"]}}. Empty = no login.
+    auth_users: str = ""
+    # Accept the dev-only X-Acme-Role header instead of a token. Forced off when app_env=aws.
+    auth_allow_role_header: bool = True
+
     # --- AWS -------------------------------------------------------------------------------
     aws_region: str = "us-east-1"
     # Hard guard: Bedrock providers refuse to run unless this is explicitly true (cost control).
@@ -58,6 +67,23 @@ class Settings(BaseSettings):
         if v not in (256, 512, 1024):
             raise ValueError("embedding_dimensions must be 256, 512 or 1024 (Titan V2)")
         return v
+
+    @property
+    def role_header_enabled(self) -> bool:
+        """The dev-only identity header is honoured only for local runs and tests."""
+        return self.app_env in ("local", "test") and self.auth_allow_role_header
+
+    def validate_for_environment(self) -> list[str]:
+        """Misconfigurations that must fail startup outside local (spec: fail loudly, early)."""
+        problems: list[str] = []
+        if self.app_env == "aws":
+            if self.auth_secret.startswith("local-dev-secret"):
+                problems.append("AUTH_SECRET is the dev default")
+            if not self.auth_users:
+                problems.append("AUTH_USERS is empty — nobody could log in")
+        if len(self.auth_secret) < 32:
+            problems.append("AUTH_SECRET must be at least 32 characters")
+        return problems
 
     @property
     def uses_aws(self) -> bool:

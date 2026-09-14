@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from cloudops_rag.chunking.models import ParentChunk
 from cloudops_rag.retrieval.models import TrailStep
 
-AnswerStatus = Literal["answered", "abstained", "no_authorized_evidence"]
+AnswerStatus = Literal["answered", "abstained", "no_authorized_evidence", "blocked"]
 
 
 class ContextSource(BaseModel):
@@ -76,6 +76,7 @@ class AnswerResponse(BaseModel):
     citations: list[Citation]
     sources: list[Citation] = Field(description="Every source offered to the model, cited or not")
     dropped_citations: list[str] = Field(default_factory=list)
+    guard_reasons: list[str] = Field(default_factory=list)
     conflicts: list[Conflict] = Field(default_factory=list)
     evidence: EvidenceStrength | None = None
     query_plan: dict[str, object] = Field(default_factory=dict)

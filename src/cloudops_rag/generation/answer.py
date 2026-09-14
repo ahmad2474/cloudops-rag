@@ -6,6 +6,7 @@ from cloudops_rag.generation.citations import to_citation, validate_citations
 from cloudops_rag.generation.conflicts import conflict_note, detect_conflicts
 from cloudops_rag.generation.context import build_context
 from cloudops_rag.generation.evidence import evidence_strength
+from cloudops_rag.generation.guardrails import check_answer
 from cloudops_rag.generation.models import AnswerResponse, Usage
 from cloudops_rag.generation.prompts import ABSTAIN_TOKEN, SYSTEM_PROMPT, build_user_prompt
 from cloudops_rag.generation.query import QueryPlan, decompose, plan_query
@@ -18,6 +19,10 @@ log = get_logger(__name__)
 
 NO_EVIDENCE_ANSWER = (
     "I couldn't find sufficient evidence in the authorized knowledge base to answer this reliably."
+)
+BLOCKED_ANSWER = (
+    "The generated answer was withheld by a safety check. Please rephrase the question or contact "
+    "the platform team."
 )
 
 
@@ -89,6 +94,19 @@ class AnswerService:
                 status="abstained",
                 answer=NO_EVIDENCE_ANSWER,
                 citations=[],
+                usage=usage,
+                latency_ms=_lat(t_start, t_retrieved, t_generated),
+            )
+
+        verdict = check_answer(raw, SYSTEM_PROMPT)
+        if verdict.blocked:
+            log.warning("answer_blocked", reasons=verdict.reasons, roles=filters.roles)
+            return AnswerResponse(
+                **base,
+                status="blocked",
+                answer=BLOCKED_ANSWER,
+                citations=[],
+                guard_reasons=verdict.reasons,
                 usage=usage,
                 latency_ms=_lat(t_start, t_retrieved, t_generated),
             )

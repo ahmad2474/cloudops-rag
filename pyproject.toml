@@ -18,6 +18,8 @@ dependencies = [
   "markdownify>=1.2.3",
   "tiktoken>=0.14.0",
   "boto3>=1.35.49",
+  "pyjwt>=2.9",
+  "bcrypt>=4.2",
 ]
 
 [dependency-groups]

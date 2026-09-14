@@ -69,3 +69,22 @@ async def seed_search(search: SearchProvider, embedding: EmbeddingProvider) -> N
         await search.index_chunks(cd.chunks, vecs)
         await search.index_parents(cd.parents)
     await search.refresh()
+
+
+TEST_PASSWORD = "correct horse battery staple"  # noqa: S105 — test fixture only
+
+
+def test_users_json() -> str:
+    """One user per role, all with TEST_PASSWORD. Hashing is slow-ish (bcrypt 12); cache it."""
+    import json
+
+    from cloudops_rag.security.auth import hash_password
+
+    h = hash_password(TEST_PASSWORD)
+    return json.dumps(
+        {
+            "dev": {"password_hash": h, "roles": ["developer"]},
+            "pe": {"password_hash": h, "roles": ["platform-engineer"]},
+            "sec": {"password_hash": h, "roles": ["security-admin"]},
+        }
+    )
